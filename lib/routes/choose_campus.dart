@@ -209,7 +209,7 @@ class CampusButtonGroup extends StatelessWidget {
           return Stack(
             children: <Widget>[
               AnimatedPositioned(
-                duration: Duration(milliseconds: 160),
+                duration: Duration(milliseconds: 240),
                 curve: Curves.ease,
                 left: contrains.maxWidth / campuses.length * campuses.indexOf(selectedCampus),
                 top: 0.0,
