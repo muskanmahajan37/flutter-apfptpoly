@@ -3,7 +3,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 
 class Logo extends StatefulWidget {
-  const Logo({ this.loading = false });
+  const Logo({this.loading = false});
 
   final bool loading;
 
@@ -16,6 +16,9 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
   static const _kMaxRippleSize = 260.0;
   static const _kMinRippleSize = 200.0;
   static const _kRipplePadding = (_kMaxRippleSize - _kMinRippleSize) / 2;
+  static const _kRippleAnimationTime = 1000;
+  static const _kSizeAnimationTime = 500;
+  static const _kAnimationTime = _kRippleAnimationTime + _kSizeAnimationTime;
 
   AnimationController rippleController;
   AnimationController sizeController;
@@ -28,52 +31,67 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    _initAnimations();
+
     super.initState();
-
-    rippleController = new AnimationController(
-      duration: Duration(milliseconds: 1000),
-      vsync: this
-    );
-
-    sizeController = new AnimationController(
-        duration: Duration(milliseconds: 500),
-        vsync: this
-    );
-
-    curveAnimation = new CurvedAnimation(parent: rippleController, curve: Curves.ease)
-      ..addListener(() => setState((){}));
-
-    rippleSizeAnimation = new SizeTween(begin: Size.square(_kMinRippleSize), end: Size.square(_kMaxRippleSize)).animate(curveAnimation);
-
-    logoSizeAnimation = new SizeTween(begin: Size.square(_kMinRippleSize), end: Size.square(_kMinRippleSize + _kRipplePadding / 2)).animate(sizeController)
-      ..addListener(() => setState((){}));
-
-    colorAnimation = new ColorTween(begin: Colors.white, end: Colors.white.withOpacity(0.0)).animate(curveAnimation);
   }
 
   @override
   void dispose() {
-    if (timer != null) {
-      timer.cancel();
-    }
+    rippleController?.dispose();
+    sizeController?.dispose();
+    timer?.cancel();
 
-    if (rippleController != null) {
-      rippleController.dispose();
-    }
     super.dispose();
+  }
+
+  void _initAnimations() {
+    final rippleSizeTween = new SizeTween(
+        begin: Size.square(_kMinRippleSize),
+        end: Size.square(_kMaxRippleSize));
+
+    final logoSizeTween = new SizeTween(
+        begin: Size.square(_kMinRippleSize),
+        end: Size.square(_kMinRippleSize + _kRipplePadding / 2));
+
+    final colorTween = new ColorTween(
+        begin: Colors.white,
+        end: Colors.white.withOpacity(0.0));
+
+    rippleController = new AnimationController(
+        duration: Duration(milliseconds: _kRippleAnimationTime),
+        vsync: this);
+
+    sizeController = new AnimationController(
+        duration: Duration(milliseconds: _kSizeAnimationTime),
+        vsync: this);
+
+    curveAnimation = new CurvedAnimation(
+        parent: rippleController,
+        curve: Curves.ease);
+
+    rippleSizeAnimation = rippleSizeTween.animate(curveAnimation);
+    logoSizeAnimation = logoSizeTween.animate(sizeController);
+    colorAnimation = colorTween.animate(curveAnimation);
+
+    // call setState() for each animation frame to update the view
+    curveAnimation.addListener(() => setState(() {}));
+    logoSizeAnimation.addListener(() => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
     if (widget.loading && (timer == null || !timer.isActive)) {
-      timer = new Timer.periodic(Duration(milliseconds: 1600), (Timer t) {
+      timer = new Timer.periodic(
+          Duration(milliseconds: _kAnimationTime),
+          (Timer t) {
         sizeController.forward();
 
         Timer(Duration(milliseconds: 300), () {
           rippleController.forward(from: 0.0);
         });
 
-        Timer(Duration(milliseconds: 500), () {
+        Timer(Duration(milliseconds: _kSizeAnimationTime), () {
           sizeController.reverse();
         });
       });
@@ -95,20 +113,17 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
                     width: rippleSizeAnimation.value.width,
                     height: rippleSizeAnimation.value.height,
                     decoration: BoxDecoration(
-                        color: colorAnimation.value,
-                        shape: BoxShape.circle
-                    ),
+                        color: colorAnimation.value, shape: BoxShape.circle),
                   ),
                   Container(
                     width: logoSizeAnimation.value.width,
                     height: logoSizeAnimation.value.height,
                     padding: EdgeInsets.all(16.0),
                     child: Image.asset('assets/images/logo.png'),
-                    decoration:  BoxDecoration(
+                    decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
-                        boxShadow: kElevationToShadow[2]
-                    ),
+                        boxShadow: kElevationToShadow[2]),
                   ),
                 ],
               ),
@@ -119,13 +134,12 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
               ? Material(
                   color: Colors.transparent,
                   child: Text(
-                      "Đăng nhập...",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        fontSize: 20.0
-                      ),
-                    ),
+                    "Đăng nhập...",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                  ),
                 )
               : SizedBox(width: 0.0, height: 0.0),
         ],

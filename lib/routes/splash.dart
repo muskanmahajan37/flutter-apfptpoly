@@ -8,7 +8,7 @@ class SplashScreen extends StatelessWidget {
 
   void _countDown(BuildContext context) async {
     await Future.delayed(_kSplashTimeout);
-    Navigator.of(context).pushNamed('/auth');
+    Navigator.of(context).pushReplacementNamed('/auth');
   }
 
   @override
@@ -18,9 +18,7 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         color: Colors.deepOrange,
-        child: Center(
-          child: Logo(),
-        ),
+        child: Logo(),
       ),
     );
   }

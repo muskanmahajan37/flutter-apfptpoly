@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'routes/splash.dart';
-import 'routes/choose_campus.dart';
+import 'routes/auth.dart';
+import 'routes/main.dart';
 
 void main() => runApp(new ApFptPoly());
 
@@ -18,7 +19,8 @@ class ApFptPoly extends StatelessWidget {
       ),
       home: SplashScreen(),
       routes: {
-        '/auth': (_) => ChooseCampusScreen()
+        '/auth': (_) => ChooseCampusScreen.AuthScreen(),
+        '/main': (_) => MainScreen()
       }
     );
   }
