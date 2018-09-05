@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import '../utils/cookie_handler.dart';
 import '../configs.dart';
 import '../model/campus.dart';
 import '../widgets/logo.dart';
@@ -14,6 +17,7 @@ class ChooseCampusScreen extends StatefulWidget {
 
 class _ChooseCampusScreenState extends State<ChooseCampusScreen> {
   final FlutterWebviewPlugin webview = new FlutterWebviewPlugin();
+  final CookieHandler cookieHandler = new CookieHandler();
 
   Campus _selectedCampus = kCampuses[0];
   bool _loading = false;
@@ -22,6 +26,8 @@ class _ChooseCampusScreenState extends State<ChooseCampusScreen> {
   void initState() {
     webview.close();
     webview.onStateChanged.listen(_onWebviewStateChanged);
+
+    cookieHandler.setupStorage();
 
     super.initState();
   }
@@ -55,6 +61,9 @@ class _ChooseCampusScreenState extends State<ChooseCampusScreen> {
       case WebViewState.startLoad:
         if (url.startsWith(LoginStatus.authDone)) {
           webview.hide();
+          webview.getCookies()
+              .then((cookies) => cookieHandler.saveCookies("https://wwww.google.com", cookies))
+              .catchError((err) => print(err));
           setState(() {
             _loading = true;
           });
@@ -77,6 +86,9 @@ class _ChooseCampusScreenState extends State<ChooseCampusScreen> {
           print('login failed');
         } else if (url.contains(LoginStatus.loginSuccess)) {
           print('login completed');
+          webview.getCookies()
+              .then((cookies) => cookieHandler.saveCookies("http://ap.poly.edu.vn", cookies))
+              .catchError((err) => print(err));
           Navigator.of(context).pushReplacementNamed('/main');
         }
         break;
@@ -97,6 +109,7 @@ class _ChooseCampusScreenState extends State<ChooseCampusScreen> {
             Expanded(flex: 3, child: Logo(loading: _loading)),
             Visible(
               visible: !_loading,
+              animation: true,
               child: CampusButtonGroup(
                 campuses: kCampuses,
                 selectedCampus: _selectedCampus,
@@ -107,6 +120,7 @@ class _ChooseCampusScreenState extends State<ChooseCampusScreen> {
             ),
             Visible(
               visible: !_loading,
+              animation: true,
               child: RaisedButton(
                 padding: EdgeInsets.all(12.0),
                 shape: RoundedRectangleBorder(

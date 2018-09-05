@@ -4,9 +4,11 @@ class Visible extends StatefulWidget {
   const Visible({
     @required this.child,
     this.visible = false,
+    this.animation = false,
   });
 
   final bool visible;
+  final bool animation;
   final Widget child;
 
   @override
@@ -20,9 +22,14 @@ class _VisibleState extends State<Visible> with SingleTickerProviderStateMixin {
       duration: Duration(milliseconds: 360),
       vsync: this,
       curve: Curves.easeOut,
-      child: widget.visible
-        ? widget.child
-        : SizedBox(width: 0.0, height: 0.0),
+      child: AnimatedOpacity(
+        curve: Curves.fastOutSlowIn,
+        opacity: widget.visible ? 1.0 : 0.6,
+        duration: Duration(milliseconds: 500),
+        child: widget.visible
+          ? widget.child
+          : widget.animation ? SizedBox(width: 0.0, height: 0.0) : Container(),
+      ),
     );
   }
 }

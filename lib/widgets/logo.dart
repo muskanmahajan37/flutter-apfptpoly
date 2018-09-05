@@ -85,14 +85,14 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
       timer = new Timer.periodic(
           Duration(milliseconds: _kAnimationTime),
           (Timer t) {
-        sizeController.forward();
+        sizeController?.forward();
 
         Timer(Duration(milliseconds: 300), () {
-          rippleController.forward(from: 0.0);
+          rippleController?.forward(from: 0.0);
         });
 
         Timer(Duration(milliseconds: _kSizeAnimationTime), () {
-          sizeController.reverse();
+          sizeController?.reverse();
         });
       });
     }

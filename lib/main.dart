@@ -14,8 +14,9 @@ class ApFptPoly extends StatelessWidget {
       theme: new ThemeData(
         primarySwatch: Colors.deepOrange,
         primaryColor: Colors.deepOrange,
-        primaryColorDark: Colors.deepOrange[800],
-        accentColor: Colors.white
+        primaryColorDark: Colors.deepOrange,
+        //primaryColorDark: Colors.deepOrange[800],
+        accentColor: Colors.deepOrange
       ),
       home: SplashScreen(),
       routes: {
