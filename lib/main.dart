@@ -10,19 +10,15 @@ class ApFptPoly extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'AP FPT Poly',
-      theme: new ThemeData(
-        primarySwatch: Colors.deepOrange,
-        primaryColor: Colors.deepOrange,
-        primaryColorDark: Colors.deepOrange,
-        //primaryColorDark: Colors.deepOrange[800],
-        accentColor: Colors.deepOrange
-      ),
-      home: SplashScreen(),
-      routes: {
-        '/auth': (_) => ChooseCampusScreen.AuthScreen(),
-        '/main': (_) => MainScreen()
-      }
-    );
+        title: 'AP FPT Poly',
+        theme: new ThemeData(
+          primarySwatch: Colors.deepOrange,
+          primaryColor: Colors.deepOrange,
+          primaryColorDark: Colors.deepOrange,
+          //primaryColorDark: Colors.deepOrange[800],
+          accentColor: Colors.deepOrange,
+        ),
+        home: SplashScreen(),
+        routes: {'/auth': (_) => AuthScreen(), '/main': (_) => MainScreen()});
   }
 }

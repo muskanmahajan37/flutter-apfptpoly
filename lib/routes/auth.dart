@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import '../utils/cookie_handler.dart';
@@ -8,14 +6,12 @@ import '../model/campus.dart';
 import '../widgets/logo.dart';
 import '../widgets/visible.dart';
 
-class ChooseCampusScreen extends StatefulWidget {
-  ChooseCampusScreen.AuthScreen();
-
+class AuthScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _ChooseCampusScreenState();
+  State<StatefulWidget> createState() => _AuthScreenState();
 }
 
-class _ChooseCampusScreenState extends State<ChooseCampusScreen> {
+class _AuthScreenState extends State<AuthScreen> {
   final FlutterWebviewPlugin webview = new FlutterWebviewPlugin();
   final CookieHandler cookieHandler = new CookieHandler();
 
@@ -61,8 +57,10 @@ class _ChooseCampusScreenState extends State<ChooseCampusScreen> {
       case WebViewState.startLoad:
         if (url.startsWith(LoginStatus.authDone)) {
           webview.hide();
-          webview.getCookies()
-              .then((cookies) => cookieHandler.saveCookies("https://wwww.google.com", cookies))
+          webview
+              .getCookies()
+              .then((cookies) =>
+                  cookieHandler.saveCookies("https://wwww.google.com", cookies))
               .catchError((err) => print(err));
           setState(() {
             _loading = true;
@@ -86,8 +84,10 @@ class _ChooseCampusScreenState extends State<ChooseCampusScreen> {
           print('login failed');
         } else if (url.contains(LoginStatus.loginSuccess)) {
           print('login completed');
-          webview.getCookies()
-              .then((cookies) => cookieHandler.saveCookies("http://ap.poly.edu.vn", cookies))
+          webview
+              .getCookies()
+              .then((cookies) =>
+                  cookieHandler.saveCookies("http://ap.poly.edu.vn", cookies))
               .catchError((err) => print(err));
           Navigator.of(context).pushReplacementNamed('/main');
         }
