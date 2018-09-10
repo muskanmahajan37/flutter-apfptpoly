@@ -7,9 +7,10 @@ const kBorderRadius = 999.0;
 
 const kMainCardBoxDecoration = BoxDecoration(
     color: Color.fromRGBO(0, 0, 0, 0.1),
-    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+    borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),
 );
 
+final TextStyle kModalTitleTextStyle = TextStyle(color: Color.fromRGBO(0, 0, 0, 0.6), fontWeight: FontWeight.bold);
 
 const kCampuses = <Campus>[
   Campus(id: 1, name: 'Hà Nội'),

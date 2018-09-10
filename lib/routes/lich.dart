@@ -15,71 +15,81 @@ class LichScreen extends StatefulWidget {
 class _LichScreenState extends State<LichScreen> {
   static const TextStyle _GhiChuTitleStyle =
       TextStyle(fontWeight: FontWeight.bold, color: Colors.black54);
-  List<Lich> dsLich = List<Lich>.generate(10, (index) {
-    return const Lich(
-      slot: "3",
-      thoiGian: "12:00-14:00",
-      tenMon: "Android Networking",
-      phong: "H204",
-      lop: "PT12352-MOB",
-    );
-  });
 
-  Widget _buildLichModal(BuildContext context) {
+  List<Lich> dsLich = List<Lich>.generate(10, (index) => Lich(
+    slot: "3",
+    thoiGian: "12:00-14:00",
+    tenMon: "Khởi sự doanh nghiệp",
+    phong: "D402",
+    lop: "PT12352-MOB",
+    ngay: "Thứ 2, ngày 10/09/2018",
+    giangDuong: "Khu Quan Hoa",
+    maMon: "SYB301",
+    giangVien: "thulk",
+    chiTiet: ChiTietLich(
+      noiDung: "Lorem ipsum",
+      nhiemVu: "Lorem ipsum",
+      hocLieu: "Lorem ipsum",
+      taiLieu: "Lorem ipsum"
+    )
+  ));
+
+  Widget _buildLichModal(Lich lich) {
     return Container(
+      height: 800.0,
       child: ListView(
         physics: BouncingScrollPhysics(),
         children: <Widget>[
           ListItem(
             title: "Ngày",
-            subtitle: "Thứ 2, ngày 10/09/2018",
+            subtitle: lich.ngay,
           ),
           ListItem(
             title: "Phòng",
-            subtitle: "D402",
+            subtitle: lich.phong,
           ),
           ListItem(
             title: "Giảng Đường",
-            subtitle: "Khu Quan Hoa",
+            subtitle: lich.giangDuong,
           ),
           ListItem(
             title: "Mã Môn",
-            subtitle: "SYB301",
+            subtitle: lich.maMon,
           ),
           ListItem(
             title: "Môn",
-            subtitle: "Khởi sự doanh nghiệp",
+            subtitle: lich.tenMon,
           ),
           ListItem(
             title: "Lớp",
-            subtitle: "PT12352-MOB",
+            subtitle: lich.lop,
           ),
           ListItem(
             title: "Giảng Viên",
-            subtitle: "thulk",
+            subtitle: lich.giangVien,
           ),
           ListItem(
             title: "Slot Thời Gian",
-            subtitle: "Slot 5 (từ 16:20:00 đến 18:20:00",
+            subtitle: "Slot ${lich.slot} (${lich.thoiGian})",
           ),
           ListItem(
             title: "Ghi Chú",
-            subtitleWidget: Container(
+            child: Container(
               padding: EdgeInsets.only(left: 12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text("NỘI DUNG", style: _GhiChuTitleStyle),
-                  Text("Lorem ipsum"),
+                  Text(lich.chiTiet.noiDung),
                   SizedBox(height: 8.0),
                   Text("NHIỆM VỤ", style: _GhiChuTitleStyle),
-                  Text("Lorem ipsum"),
+                  Text(lich.chiTiet.nhiemVu),
                   SizedBox(height: 8.0),
                   Text("HỌC LIỆU", style: _GhiChuTitleStyle),
-                  Text("Lorem ipsum"),
+                  Text(lich.chiTiet.hocLieu),
                   SizedBox(height: 8.0),
                   Text("TÀI LIỆU", style: _GhiChuTitleStyle),
-                  Text("Lorem ipsum"),
+                  Text(lich.chiTiet.taiLieu),
                 ],
               ),
             ),
@@ -92,22 +102,23 @@ class _LichScreenState extends State<LichScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            padding:
-                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
-            itemCount: dsLich.length,
-            itemBuilder: (_, index) => LichItem(
-                  lich: dsLich[index],
-                  onTap: () {
-                    showRoundedModalBottomSheet(
-                      context: context,
-                      color: Colors.white,
-                      radius: 12.0,
-                      builder: _buildLichModal,
-                    );
-                  },
-                )),
-        decoration: kMainCardBoxDecoration);
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        padding:
+          const EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
+        itemCount: dsLich.length,
+        itemBuilder: (_, index) => LichItem(
+          lich: dsLich[index],
+          onTap: () {
+            showRoundedModalBottomSheet(
+              context: context,
+              color: Colors.white,
+              radius: 12.0,
+              builder: (_) => _buildLichModal(dsLich[index]),
+            );
+          },
+        )),
+      decoration: kMainCardBoxDecoration
+    );
   }
 }
