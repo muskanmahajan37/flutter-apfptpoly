@@ -55,6 +55,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         backgroundColor: Theme.of(context).primaryColor,
         appBar: AppBar(
           title: Text("AP FPT Poly"),
+          centerTitle: true,
           elevation: 0.0,
         ),
         body: Container(

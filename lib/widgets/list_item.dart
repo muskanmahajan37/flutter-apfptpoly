@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
 class ListItem extends StatelessWidget {
-  const ListItem(
-      {this.title,
-      this.subtitle,
-      this.child,
-      this.alignment = CrossAxisAlignment.start});
+  const ListItem({
+    this.title,
+    this.subtitle,
+    this.child,
+    this.alignment = CrossAxisAlignment.start,
+    this.onTap
+  });
 
   final String title;
   final String subtitle;
   final Widget child;
   final CrossAxisAlignment alignment;
+  final Function onTap;
 
   static const TextStyle _kTitleStyle =
       TextStyle(fontSize: 12.0, color: Colors.black54);
@@ -23,20 +26,29 @@ class ListItem extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       decoration: BoxDecoration(
-          border: _kBorderStyle
+        color: Colors.white,
+        border: _kBorderStyle,
       ),
       child: Column(
         crossAxisAlignment: alignment,
         children: <Widget>[
-          title == null ? Container() : Text(title, style: _kTitleStyle),
+          title == null
+              ? Container()
+              : Text(title, style: _kTitleStyle),
+
           title == null || subtitle == null
               ? Container()
               : SizedBox(height: 2.0),
+
+          subtitle == null
+              ? Container()
+              : Text(
+                subtitle,
+                style: _kSubtitleStyle,
+              ),
+
           child == null
-              ? Text(
-                  subtitle,
-                  style: _kSubtitleStyle,
-                )
+              ? Container()
               : child
         ],
       ),

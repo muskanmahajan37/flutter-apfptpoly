@@ -20,6 +20,17 @@ const kCampuses = <Campus>[
   Campus(id: 10, name: 'C.Thơ')
 ];
 
+const kPeriods = <Period>[
+  Period(title: "7 ngày tới", value: 7),
+  Period(title: "14 ngày tới", value: 14),
+  Period(title: "30 ngày tới", value: 30),
+  Period(title: "90 ngày tới", value: 90),
+  Period(title: "7 ngày trước", value: -7),
+  Period(title: "14 ngày trước", value: -14),
+  Period(title: "30 ngày trước", value: -30),
+  Period(title: "90 ngày trước", value: -90),
+];
+
 class LoginStatus {
   static const finishedChoosingCampus = "http://ap.poly.edu.vn/index.php";
   static const startLogin = "https://accounts.google.com/o/oauth2/auth?client_id=";
@@ -27,4 +38,11 @@ class LoginStatus {
   static const wrongAccount = "msg=You%20are%20not%20connected%20to%20Google%20with%20account%20fpt.edu.vn%20%20or%20your%20session%20has%20expired";
   static const authDone = "http://ap.poly.edu.vn/hybridauth/?hauth.done=Google";
   static const loginSuccess = "http://ap.poly.edu.vn/students/index.php";
+}
+
+class Period {
+  final String title;
+  final int value;
+
+  const Period({ this.title, this.value });
 }

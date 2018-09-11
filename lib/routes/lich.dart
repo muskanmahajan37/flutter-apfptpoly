@@ -36,7 +36,6 @@ class _LichScreenState extends State<LichScreen> {
 
   Widget _buildLichModal(Lich lich) {
     return Container(
-      height: 800.0,
       child: ListView(
         physics: BouncingScrollPhysics(),
         children: <Widget>[
