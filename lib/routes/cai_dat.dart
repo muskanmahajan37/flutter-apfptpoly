@@ -13,6 +13,10 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
   static const EdgeInsets _kCardMargin =
       const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0);
 
+  Period selectedPeriod = kPeriods[0];
+  bool autoGetData = false;
+  bool showAds = false;
+
   SinhVien sinhVien = SinhVien(
     avatar:
         "https://scontent.fhan2-2.fna.fbcdn.net/v/t1.0-9/14055088_835216616580439_407796087641692406_n.jpg?_nc_cat=0&oh=41a6d064f4e67b7d9b04226b240e6aad&oe=5BF052C8",
@@ -118,20 +122,31 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
     );
   }
 
-  Widget _buildNgayModal() {
+  Widget _buildPeriodModal() {
     return Container(
+      height: 230.0,
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
         itemCount: kPeriods.length,
         itemBuilder: (_, index) {
+          final period = kPeriods[index];
+
           return Container(
             child: FlatButton(
               padding: EdgeInsets.all(16.0),
-              child: Text(kPeriods[index].title),
+              child: Text(kPeriods[index].title, style: TextStyle(
+                color: period == selectedPeriod ? Colors.deepOrange : Colors.black54
+              )),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(index == 0 ? 12.0 : 0.0))
               ),
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  selectedPeriod = kPeriods[index];
+                });
+
+                Navigator.pop(context);
+              },
             ),
             decoration: BoxDecoration(
               border: Border(bottom: BorderSide(color: Colors.black12))
@@ -142,20 +157,31 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
     );
   }
 
-  Widget _buildKyModal() {
+  Widget _buildTermModal() {
     return Container(
+      height: 230.0,
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
         itemCount: kPeriods.length,
         itemBuilder: (_, index) {
+          final period = kPeriods[index];
+
           return Container(
               child: FlatButton(
                 padding: EdgeInsets.all(16.0),
-                child: Text(kPeriods[index].title),
+                child: Text(kPeriods[index].title, style: TextStyle(
+                    color: period == selectedPeriod ? Colors.deepOrange : Colors.black54
+                )),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(top: Radius.circular(index == 0 ? 12.0 : 0.0))
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    selectedPeriod = kPeriods[index];
+                  });
+
+                  Navigator.pop(context);
+                },
               ),
               decoration: BoxDecoration(
                   border: Border(bottom: BorderSide(color: Colors.black12))
@@ -165,6 +191,8 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
       ),
     );
   }
+
+
 
   Widget _buildCard({
     @required IconData icon,
@@ -244,8 +272,8 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
           _buildCard(
             icon: Icons.event,
             text: "Lịch học",
-            trailing: const Text(
-              "14 ngày tới",
+            trailing: Text(
+              selectedPeriod.title,
               style: TextStyle(color: Colors.deepOrange),
             ),
             onTap: () {
@@ -253,15 +281,15 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
                 context: context,
                 color: Colors.white,
                 radius: 12.0,
-                builder: (_) => _buildNgayModal(),
+                builder: (_) => _buildPeriodModal(),
               );
             }
           ),
           _buildCard(
             icon: Icons.event_note,
             text: "Kỳ",
-            trailing: const Text(
-              "Summer 2018",
+            trailing: Text(
+              selectedPeriod.title,
               style: TextStyle(color: Colors.deepOrange),
             ),
             onTap: () {
@@ -269,7 +297,7 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
                 context: context,
                 color: Colors.white,
                 radius: 12.0,
-                builder: (_) => _buildKyModal(),
+                builder: (_) => _buildTermModal(),
               );
             }
           ),
@@ -277,16 +305,24 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
             icon: Icons.refresh,
             text: "Tự động tải",
             trailing: Checkbox(
-              value: true,
-              onChanged: (val) {},
+              value: autoGetData,
+              onChanged: (val) {
+                setState(() {
+                  autoGetData = val;
+                });
+              },
             ),
           ),
           _buildCard(
             icon: Icons.favorite,
             text: "Hiện quảng cáo",
             trailing: Checkbox(
-              value: true,
-              onChanged: (val) {},
+              value: showAds,
+              onChanged: (val) {
+                setState(() {
+                  showAds = val;
+                });
+              },
             ),
           ),
         ],
