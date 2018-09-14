@@ -108,19 +108,19 @@ class _LichScreenState extends State<LichScreen> {
     return Container(
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
+
         padding:
-          const EdgeInsets.symmetric(vertical: 10.0),
+          const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 4.0),
         itemCount: dsGroupLich.length,
         itemBuilder: (_, index) {
           final groupLich = dsGroupLich[index];
           return StickyHeaderBuilder(
             builder: (context, amount) {
-              print("$index $amount");
               final opacity = amount > 0 ? 0.0 : amount.abs();
               final isSticking = opacity > 0.8;
               return Center(
                 child: Container(
-                  margin: EdgeInsets.only(top: 8.0),
+                  margin: EdgeInsets.only(top: 4.0),
                   padding: const EdgeInsets.all(8.0),
                   decoration: ShapeDecoration(
                     color: Colors.white.withOpacity(opacity),
