@@ -59,7 +59,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           elevation: 0.0,
         ),
         body: Container(
-          margin: EdgeInsets.only(top: 2.0),
           child: Stack(children: <Widget>[
             Visible(visible: _selectedTab == 0, child: LichScreen()),
             Visible(visible: _selectedTab == 1, child: DiemDanhScreen()),

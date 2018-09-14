@@ -40,7 +40,7 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
     kyThu: "7",
   );
 
-  Widget _buildThongTinCaNhanModal() {
+  Widget _buildStudentInfoModal() {
     return Container(
       child: ListView(
         physics: BouncingScrollPhysics(),
@@ -259,7 +259,7 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
                   context: context,
                   color: Colors.white,
                   radius: 12.0,
-                  builder: (_) => _buildThongTinCaNhanModal(),
+                  builder: (_) => _buildStudentInfoModal(),
                 );
               }),
           _buildCard(

@@ -6,7 +6,7 @@ class ListItem extends StatelessWidget {
     this.subtitle,
     this.child,
     this.alignment = CrossAxisAlignment.start,
-    this.onTap
+    this.onTap,
   });
 
   final String title;
@@ -26,7 +26,6 @@ class ListItem extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       decoration: BoxDecoration(
-        color: Colors.white,
         border: _kBorderStyle,
       ),
       child: Column(
