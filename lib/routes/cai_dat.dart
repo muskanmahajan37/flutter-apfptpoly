@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rounded_modal/rounded_modal.dart';
 import '../configs.dart';
+import '../utils/app_settings.dart';
 import '../model/sinh_vien.dart';
 import '../widgets/list_item.dart';
 
@@ -13,9 +14,26 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
   static const EdgeInsets _kCardMargin =
       const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0);
 
+  AppSettings appSettings;
+
   Period selectedPeriod = kPeriods[0];
   bool autoGetData = false;
-  bool showAds = false;
+  bool showAds = true;
+
+
+  @override
+  void initState() {
+    AppSettings.getInstance().then((settings) {
+      appSettings = settings;
+
+      setState(() {
+        autoGetData = appSettings.isAutoGet;
+        showAds = appSettings.isShowAds;
+      });
+    });
+
+    super.initState();
+  }
 
   SinhVien sinhVien = SinhVien(
     avatar:
@@ -309,6 +327,7 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
               onChanged: (val) {
                 setState(() {
                   autoGetData = val;
+                  appSettings.isAutoGet = val;
                 });
               },
             ),
@@ -321,6 +340,7 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
               onChanged: (val) {
                 setState(() {
                   showAds = val;
+                  appSettings.isShowAds = val;
                 });
               },
             ),
