@@ -1,9 +1,9 @@
 class Term {
-  final String key;
-  final String value;
+  final int value;
+  final String title;
 
-  Term(this.key, this.value);
+  const Term(this.value, this.title);
 
   @override
-  String toString() => "$key=$value";
+  String toString() => "$value=$title";
 }

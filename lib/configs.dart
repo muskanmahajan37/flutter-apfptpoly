@@ -46,3 +46,15 @@ class Period {
 
   const Period({ this.title, this.value });
 }
+
+class Urls {
+  static const server = "http://apfptpoly.herokuapp.com";
+  static const host = "http://ap.poly.edu.vn/students/index.php";
+
+  static const auth = "$server/auth";
+
+  static const thongTinSinhVien = host;
+  static const lich = "$host?router=lichhoc";
+  static const diemDanh = "$host?router=diemdanh";
+  static const diem = "$host?router=diemtheoky";
+}

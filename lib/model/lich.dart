@@ -11,16 +11,16 @@ class Lich {
   final ChiTietLich chiTiet;
 
   const Lich({
-    this.ngay,
-    this.giangDuong,
-    this.maMon,
-    this.giangVien,
-    this.slot,
-    this.thoiGian,
-    this.tenMon,
-    this.phong,
-    this.lop,
-    this.chiTiet
+    this.ngay = "",
+    this.giangDuong = "",
+    this.maMon = "",
+    this.giangVien = "",
+    this.slot = "",
+    this.thoiGian = "",
+    this.tenMon = "",
+    this.phong = "",
+    this.lop = "",
+    this.chiTiet = const ChiTietLich(),
   });
 }
 
@@ -30,5 +30,10 @@ class ChiTietLich {
   final String hocLieu;
   final String taiLieu;
 
-  const ChiTietLich({ this.noiDung, this.nhiemVu, this.hocLieu, this.taiLieu });
+  const ChiTietLich({
+    this.noiDung = "",
+    this.nhiemVu = "",
+    this.hocLieu = "",
+    this.taiLieu = "",
+  });
 }

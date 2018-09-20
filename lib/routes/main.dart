@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import '../utils/cookie_handler.dart';
 import '../widgets/visible.dart';
 import './lich.dart';
 import './diem_danh.dart';
@@ -13,17 +12,9 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
-  final CookieHandler cookieHandler = new CookieHandler();
   final FlutterWebviewPlugin webview = new FlutterWebviewPlugin();
 
   int _selectedTab = 0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    cookieHandler.setupStorage();
-  }
 
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
@@ -34,15 +25,22 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             }),
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.event),
-              title: Text("Lịch"),
-              backgroundColor: Colors.white),
+            icon: Icon(Icons.event),
+            title: Text("Lịch"),
+            backgroundColor: Colors.white,
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.playlist_add_check), title: Text("Điểm Danh")),
+            icon: Icon(Icons.playlist_add_check),
+            title: Text("Điểm Danh"),
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.filter_9), title: Text("Điểm")),
+            icon: Icon(Icons.filter_9),
+            title: Text("Điểm"),
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), title: Text("Cài đặt")),
+            icon: Icon(Icons.settings),
+            title: Text("Cài đặt"),
+          ),
         ]);
   }
 

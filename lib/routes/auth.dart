@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import '../utils/app_settings.dart';
 import '../utils/cookie_handler.dart';
+import '../task/get_data.dart';
 import '../configs.dart';
 import '../model/campus.dart';
 import '../widgets/logo.dart';
@@ -15,6 +17,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final FlutterWebviewPlugin webview = new FlutterWebviewPlugin();
   final CookieHandler cookieHandler = new CookieHandler();
 
+  AppSettings appSettings;
   Campus _selectedCampus = kCampuses[0];
   bool _loading = false;
 
@@ -24,6 +27,10 @@ class _AuthScreenState extends State<AuthScreen> {
     webview.onStateChanged.listen(_onWebviewStateChanged);
 
     cookieHandler.setupStorage();
+
+    AppSettings.getInstance().then((settings) {
+      appSettings = settings;
+    });
 
     super.initState();
   }
@@ -41,59 +48,64 @@ class _AuthScreenState extends State<AuthScreen> {
     });
     webview.launch(
         "http://ap.poly.edu.vn/choose_campus.php?campus_id=${_selectedCampus.id}",
+        clearCache: true,
+        clearCookies: true,
         userAgent: kUserAgent,
         hidden: true,
         withJavascript: true,
         withLocalStorage: true);
   }
 
-  _onWebviewStateChanged(WebViewStateChanged state) {
+  _onWebviewStateChanged(WebViewStateChanged state) async {
     print(state.type.toString() + " - " + state.url);
 
     final type = state.type;
     final url = state.url;
 
-    switch (type) {
-      case WebViewState.startLoad:
-        if (url.startsWith(LoginStatus.authDone)) {
-          webview.hide();
-          webview
-              .getCookies()
-              .then((cookies) =>
-                  cookieHandler.saveCookies("https://wwww.google.com", cookies))
-              .catchError((err) => print(err));
-          setState(() {
-            _loading = true;
-          });
-        }
-        break;
+    try {
+      switch (type) {
+        case WebViewState.startLoad:
+          if (url.startsWith(LoginStatus.authDone)) {
+            webview.hide();
+            final cookies = await webview.getCookies();
+            cookieHandler.saveCookies("https://wwww.google.com", cookies);
+            setState(() { _loading = true; });
+          }
+          break;
 
-      case WebViewState.finishLoad:
-        if (url == LoginStatus.finishedChoosingCampus) {
-          webview.close();
-          webview.launch("http://ap.poly.edu.vn/hlogin.php?provider=Google",
+        case WebViewState.finishLoad:
+          if (url == LoginStatus.finishedChoosingCampus) {
+            webview.close();
+            webview.launch("http://ap.poly.edu.vn/hlogin.php?provider=Google",
               userAgent: kUserAgent,
               withJavascript: true,
-              withLocalStorage: true);
-        } else if (url.contains(LoginStatus.wrongAccount)) {
-          webview.hide();
-          print('wrong account');
-        } else if (url.contains(LoginStatus.loginFailed)) {
-          webview.hide();
+              withLocalStorage: true,
+            );
+          } else if (url.contains(LoginStatus.wrongAccount)) {
+            webview.hide();
+            print('wrong account');
+          } else if (url.contains(LoginStatus.loginFailed)) {
+            webview.hide();
 
-          print('login failed');
-        } else if (url.contains(LoginStatus.loginSuccess)) {
-          print('login completed');
-          webview
-              .getCookies()
-              .then((cookies) =>
-                  cookieHandler.saveCookies("http://ap.poly.edu.vn", cookies))
-              .catchError((err) => print(err));
-          Navigator.of(context).pushReplacementNamed('/main');
-        }
-        break;
+            print('login failed');
+          } else if (url.contains(LoginStatus.loginSuccess)) {
+            print('login completed');
 
-      case WebViewState.shouldStart:
+            final cookies = await webview.getCookies();
+            cookieHandler.saveCookies("http://ap.poly.edu.vn", cookies);
+
+            final sinhVien = await ApTask.getSinhVien();
+            await ApTask.registerAccount(sinhVien.tenDangNhap, cookieHandler.readCookies("http://ap.poly.edu.vn"));
+
+            appSettings.isSignedIn = true;
+            Navigator.of(context).pushReplacementNamed('/main');
+          }
+          break;
+
+        case WebViewState.shouldStart:
+      }
+    } catch (err) {
+      print(err);
     }
   }
 

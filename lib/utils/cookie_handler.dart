@@ -25,7 +25,7 @@ class CookieHandler {
 
   void saveCookies(String url, Map<String, String> cookies) {
     final File file = getFile(url);
-    final String content = cookies.keys.map((key) => "${key.replaceAll("\"", "")}=${cookies[key]}").join(";");
+    final String content = cookies.keys.map((key) => "${key.replaceAll("\"", "")}=${cookies[key].replaceAll("\"", "")}").join("; ");
     file.writeAsStringSync(content);
   }
 
@@ -39,7 +39,7 @@ class CookieHandler {
     final cookies = <Cookie>[];
 
     if (cookieString?.isNotEmpty == true) {
-      cookieString.split(';').forEach((String cookie) {
+      cookieString.split(new RegExp(r";[\n\r\s]+", multiLine: true)).forEach((String cookie) {
         final splited = cookie.split('=');
         cookies.add(new Cookie(splited[0], splited[1]));
       });

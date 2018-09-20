@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:rounded_modal/rounded_modal.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import '../configs.dart';
+import '../model/term.dart';
+import '../task/get_data.dart';
 import '../utils/app_settings.dart';
 import '../model/sinh_vien.dart';
 import '../widgets/list_item.dart';
@@ -11,12 +16,15 @@ class CaiDatScreen extends StatefulWidget {
 }
 
 class _CaiDatScreenState extends State<CaiDatScreen> {
+  final FlutterWebviewPlugin webview = FlutterWebviewPlugin();
   static const EdgeInsets _kCardMargin =
       const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0);
 
   AppSettings appSettings;
 
   Period selectedPeriod = kPeriods[0];
+  Term selectedTerm;
+
   bool autoGetData = false;
   bool showAds = true;
 
@@ -27,38 +35,13 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
       appSettings = settings;
 
       setState(() {
-        autoGetData = appSettings.isAutoGet;
-        showAds = appSettings.isShowAds;
+        selectedTerm = appSettings.selectedTerm;
       });
     });
-
     super.initState();
   }
 
-  SinhVien sinhVien = SinhVien(
-    avatar:
-        "https://scontent.fhan2-2.fna.fbcdn.net/v/t1.0-9/14055088_835216616580439_407796087641692406_n.jpg?_nc_cat=0&oh=41a6d064f4e67b7d9b04226b240e6aad&oe=5BF052C8",
-    tenDangNhap: "hungpsph04930",
-    hoTen: "Phạm Sỹ Hưng",
-    maSinhVien: "PH04930",
-    gioiTinh: "Nam",
-    ngaySinh: "25/09/1997",
-    email: "hungpsph04930@fpt.edu.vn",
-    diaChi: "abcxyz",
-    khoa: "12.3",
-    nganh: "Công nghệ thông tin",
-    chuyenNganh: "Lập trình máy tính(Lập trình máy tính - Thiết bị di động)",
-    noiDungDaoTao: "Lập trình máy tính - Lập trình mobile",
-    cmnd: "013507259",
-    ngayCap: "10/02/2012",
-    noiCap: "Hà Nội",
-    ngayNhapHoc: "30/08/2016",
-    heDaoTao: "Cao đẳng",
-    trangThai: "HDI ( Học đi )",
-    kyThu: "7",
-  );
-
-  Widget _buildStudentInfoModal() {
+  Widget _buildStudentInfoModal(SinhVien sinhVien) {
     return Container(
       child: ListView(
         physics: BouncingScrollPhysics(),
@@ -150,49 +133,16 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
           final period = kPeriods[index];
 
           return Container(
-            child: FlatButton(
-              padding: EdgeInsets.all(16.0),
-              child: Text(kPeriods[index].title, style: TextStyle(
-                color: period == selectedPeriod ? Colors.deepOrange : Colors.black54
-              )),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(index == 0 ? 12.0 : 0.0))
-              ),
-              onPressed: () {
-                setState(() {
-                  selectedPeriod = kPeriods[index];
-                });
-
-                Navigator.pop(context);
-              },
-            ),
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.black12))
-            )
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildTermModal() {
-    return Container(
-      height: 230.0,
-      child: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        itemCount: kPeriods.length,
-        itemBuilder: (_, index) {
-          final period = kPeriods[index];
-
-          return Container(
               child: FlatButton(
                 padding: EdgeInsets.all(16.0),
-                child: Text(kPeriods[index].title, style: TextStyle(
-                    color: period == selectedPeriod ? Colors.deepOrange : Colors.black54
-                )),
+                child: Text(kPeriods[index].title,
+                    style: TextStyle(
+                        color: period == selectedPeriod
+                            ? Colors.deepOrange
+                            : Colors.black54)),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(index == 0 ? 12.0 : 0.0))
-                ),
+                    borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(index == 0 ? 12.0 : 0.0))),
                 onPressed: () {
                   setState(() {
                     selectedPeriod = kPeriods[index];
@@ -202,19 +152,57 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
                 },
               ),
               decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.black12))
-              )
-          );
+                  border: Border(bottom: BorderSide(color: Colors.black12))));
         },
       ),
     );
   }
 
+  Widget _buildTermModal(List<Term> terms) {
+    return Container(
+      height: 230.0,
+      child: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        itemCount: terms.length,
+        itemBuilder: (_, index) {
+          final term = terms[index];
 
+          return Container(
+              child: FlatButton(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  term.title,
+                  style: TextStyle(
+                    color: term.value == selectedTerm.value
+                        ? Colors.deepOrange
+                        : Colors.black54,
+                  ),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(index == 0 ? 12.0 : 0.0),
+                  ),
+                ),
+                onPressed: () {
+                  appSettings.selectedTermValue = term.value;
+
+                  setState(() {
+                    selectedTerm = term;
+                  });
+
+                  Navigator.pop(context);
+                },
+              ),
+              decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: Colors.black12))));
+        },
+      ),
+    );
+  }
 
   Widget _buildCard({
-    @required IconData icon,
-    @required String text,
+    IconData icon,
+    String text,
     Function onTap,
     Widget trailing,
   }) {
@@ -232,62 +220,65 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.only(top: 24.0, bottom: 8.0),
-        children: <Widget>[
-          Center(
-            child: SizedBox(
-              width: 160.0,
-              height: 160.0,
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(sinhVien.avatar),
-              ),
+  Widget _buildSinhVienLayout(SinhVien sinhVien, List<Term> terms) {
+    return ListView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.only(top: 24.0, bottom: 8.0),
+      children: <Widget>[
+        Center(
+          child: Container(
+            width: 160.0,
+            height: 160.0,
+            padding: EdgeInsets.all(6.0),
+            decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: CircleBorder(),
+              shadows: kElevationToShadow[1],
+            ),
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(sinhVien.avatar),
             ),
           ),
-          const SizedBox(height: 16.0),
-          Center(
-            child: Text(
-              sinhVien.hoTen,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 26.0,
-                color: Colors.black87,
-              ),
+        ),
+        const SizedBox(height: 16.0),
+        Center(
+          child: Text(
+            sinhVien.hoTen,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 26.0,
+              color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 4.0),
-          Center(
-            child: Text(
-              sinhVien.email,
-              style: TextStyle(
-                color: Colors.black54,
-              ),
+        ),
+        const SizedBox(height: 4.0),
+        Center(
+          child: Text(
+            sinhVien.email,
+            style: TextStyle(
+              color: Colors.black54,
             ),
           ),
-          const SizedBox(height: 24.0),
-          _buildCard(
-              icon: Icons.person,
-              text: "Thông tin cá nhân",
-              onTap: () {
-                showRoundedModalBottomSheet(
-                  context: context,
-                  color: Colors.white,
-                  radius: 12.0,
-                  builder: (_) => _buildStudentInfoModal(),
-                );
-              }),
-          _buildCard(
+        ),
+        const SizedBox(height: 24.0),
+        _buildCard(
+            icon: Icons.person,
+            text: "Thông tin cá nhân",
+            onTap: () {
+              showRoundedModalBottomSheet(
+                context: context,
+                color: Colors.white,
+                radius: 12.0,
+                builder: (_) => _buildStudentInfoModal(sinhVien),
+              );
+            }),
+        _buildCard(
             icon: Icons.whatshot,
             text: "Tin tức",
             onTap: () {
               Navigator.of(context).pushNamed("/news");
-            }
-          ),
-          _buildCard(
+            }),
+        _buildCard(
             icon: Icons.event,
             text: "Lịch học",
             trailing: Text(
@@ -301,13 +292,12 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
                 radius: 12.0,
                 builder: (_) => _buildPeriodModal(),
               );
-            }
-          ),
-          _buildCard(
+            }),
+        _buildCard(
             icon: Icons.event_note,
             text: "Kỳ",
             trailing: Text(
-              selectedPeriod.title,
+              selectedTerm.title,
               style: TextStyle(color: Colors.deepOrange),
             ),
             onTap: () {
@@ -315,38 +305,73 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
                 context: context,
                 color: Colors.white,
                 radius: 12.0,
-                builder: (_) => _buildTermModal(),
+                builder: (_) => _buildTermModal(terms),
               );
+            }),
+        _buildCard(
+          icon: Icons.refresh,
+          text: "Tự động tải",
+          trailing: Checkbox(
+            value: autoGetData,
+            onChanged: (val) {
+              setState(() {
+                autoGetData = val;
+                appSettings.isAutoGet = val;
+              });
+            },
+          ),
+        ),
+        _buildCard(
+          icon: Icons.favorite,
+          text: "Hiện quảng cáo",
+          trailing: Checkbox(
+            value: showAds,
+            onChanged: (val) {
+              setState(() {
+                showAds = val;
+                appSettings.isShowAds = val;
+              });
+            },
+          ),
+        ),
+        _buildCard(
+          icon: Icons.exit_to_app,
+          text: "Đăng xuất",
+          onTap: () {
+            appSettings.isSignedIn = false;
+            appSettings.terms = null;
+            appSettings.selectedTermValue = null;
+            Navigator.of(context).pushReplacementNamed("/auth");
+          }
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: FutureBuilder(
+        future: Future.wait([
+          ApTask.getSinhVien(),
+          ApTask.getTerms(),
+        ]),
+        builder: (_, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data != null) {
+              final SinhVien sinhVien = snapshot.data[0];
+              final List<Term> terms = snapshot.data[1];
+
+              if (appSettings.selectedTermValue == null) {
+                selectedTerm = appSettings.selectedTerm;
+              }
+
+              return _buildSinhVienLayout(sinhVien, terms);
             }
-          ),
-          _buildCard(
-            icon: Icons.refresh,
-            text: "Tự động tải",
-            trailing: Checkbox(
-              value: autoGetData,
-              onChanged: (val) {
-                setState(() {
-                  autoGetData = val;
-                  appSettings.isAutoGet = val;
-                });
-              },
-            ),
-          ),
-          _buildCard(
-            icon: Icons.favorite,
-            text: "Hiện quảng cáo",
-            trailing: Checkbox(
-              value: showAds,
-              onChanged: (val) {
-                setState(() {
-                  showAds = val;
-                  appSettings.isShowAds = val;
-                });
-              },
-            ),
-          ),
-        ],
-      ),
+          }
+
+          return Center(child: new CircularProgressIndicator());
+        }),
       decoration: kMainCardBoxDecoration,
     );
   }

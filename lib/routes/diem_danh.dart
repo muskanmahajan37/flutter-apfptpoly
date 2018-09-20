@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rounded_modal/rounded_modal.dart';
 import '../configs.dart';
-import '../model/diem_danh.dart';
+import '../model/bang_diem_danh.dart';
+import '../task/get_data.dart';
 import '../widgets/diem_danh_item.dart';
 import '../widgets/list_item.dart';
 
@@ -14,82 +15,7 @@ class DiemDanhScreen extends StatefulWidget {
 
 class _DiemDanhScreenState extends State<DiemDanhScreen> {
 
-  List<DiemDanh> dsDiemDanh = List<DiemDanh>.generate(10, (index) {
-    return const DiemDanh(
-        tenMon: "Mobile Marketing",
-        tongVang: "3/17",
-        phanTramVang: "24",
-        maMon: "MOB307",
-        lop: "MOB307.2",
-        chiTiet: const <ChiTietDiemDanh>[
-          ChiTietDiemDanh(
-              ngay: "09/07/2018",
-              baiHoc: "1",
-              ca: "1",
-              nguoiDiemDanh: "duongpt2",
-              moTa: "Lý thuyết",
-              trangThai: "Present",
-              ghiChu: ""),
-          ChiTietDiemDanh(
-              ngay: "09/07/2018",
-              baiHoc: "1",
-              ca: "1",
-              nguoiDiemDanh: "duongpt2",
-              moTa: "Lý thuyết",
-              trangThai: "Present",
-              ghiChu: ""),
-          ChiTietDiemDanh(
-              ngay: "09/07/2018",
-              baiHoc: "1",
-              ca: "1",
-              nguoiDiemDanh: "duongpt2",
-              moTa: "Lý thuyết",
-              trangThai: "Present",
-              ghiChu: ""),
-          ChiTietDiemDanh(
-              ngay: "09/07/2018",
-              baiHoc: "1",
-              ca: "1",
-              nguoiDiemDanh: "duongpt2",
-              moTa: "Lý thuyết",
-              trangThai: "Present",
-              ghiChu: ""),
-          ChiTietDiemDanh(
-              ngay: "09/07/2018",
-              baiHoc: "1",
-              ca: "1",
-              nguoiDiemDanh: "duongpt2",
-              moTa: "Lý thuyết",
-              trangThai: "Present",
-              ghiChu: ""),
-          ChiTietDiemDanh(
-              ngay: "09/07/2018",
-              baiHoc: "1",
-              ca: "1",
-              nguoiDiemDanh: "duongpt2",
-              moTa: "Lý thuyết",
-              trangThai: "Present",
-              ghiChu: ""),
-          ChiTietDiemDanh(
-              ngay: "09/07/2018",
-              baiHoc: "1",
-              ca: "1",
-              nguoiDiemDanh: "duongpt2",
-              moTa: "Lý thuyết",
-              trangThai: "Present",
-              ghiChu: ""),
-          ChiTietDiemDanh(
-              ngay: "09/07/2018",
-              baiHoc: "1",
-              ca: "1",
-              nguoiDiemDanh: "duongpt2",
-              moTa: "Lý thuyết",
-              trangThai: "Present",
-              ghiChu: ""),
-        ]);
-  });
-
-  Widget _buildDiemDanhModal(DiemDanh diemDanh) {
+  Widget _buildDiemDanhModal(BangDiemDanh bangDiemDanh) {
     return Container(
       child: Column(
         children: <Widget>[
@@ -107,7 +33,7 @@ class _DiemDanhScreenState extends State<DiemDanhScreen> {
                       textAlign: TextAlign.center, style: kModalTitleTextStyle),
                 ),
                 Expanded(
-                  flex: 2,
+                  flex: 3,
                   child: Text("Mô tả",
                       textAlign: TextAlign.center, style: kModalTitleTextStyle),
                 ),
@@ -121,10 +47,10 @@ class _DiemDanhScreenState extends State<DiemDanhScreen> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: diemDanh.chiTiet.length,
+              itemCount: bangDiemDanh.dsDiemDanh.length,
               physics: BouncingScrollPhysics(),
               itemBuilder: (_, index) {
-                final chiTiet = diemDanh.chiTiet[index];
+                final chiTiet = bangDiemDanh.dsDiemDanh[index];
                 final trangThaiColor = chiTiet.trangThai == "Present"
                     ? Colors.green
                     : chiTiet.trangThai == "Absent"
@@ -144,7 +70,7 @@ class _DiemDanhScreenState extends State<DiemDanhScreen> {
                         child: Text(chiTiet.ca, textAlign: TextAlign.center),
                       ),
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(chiTiet.moTa, textAlign: TextAlign.center),
                       ),
                       Expanded(
@@ -169,24 +95,41 @@ class _DiemDanhScreenState extends State<DiemDanhScreen> {
     );
   }
 
+  Widget _buildBangDiemDanhLayout(List<BangDiemDanh> dsBangDiemDanh) {
+    return ListView.builder(
+      physics: BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
+      itemCount: dsBangDiemDanh.length,
+      itemBuilder: (_, index) => DiemDanhItem(
+        bangDiemDanh: dsBangDiemDanh[index],
+        onTap: () {
+          showRoundedModalBottomSheet(
+            context: context,
+            color: Colors.white,
+            radius: 12.0,
+            builder: (_) => _buildDiemDanhModal(dsBangDiemDanh[index]),
+          );
+        },
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView.builder(
-          physics: BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
-          itemCount: dsDiemDanh.length,
-          itemBuilder: (_, index) => DiemDanhItem(
-                diemDanh: dsDiemDanh[index],
-                onTap: () {
-                  showRoundedModalBottomSheet(
-                    context: context,
-                    color: Colors.white,
-                    radius: 12.0,
-                    builder: (_) => _buildDiemDanhModal(dsDiemDanh[index]),
-                  );
-                },
-              )),
+      child: FutureBuilder(
+        future: ApTask.getDanhSachDiemDanh(),
+        builder: (_, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data != null) {
+              final List<BangDiemDanh> dsBangDiemDanh = snapshot.data;
+              return _buildBangDiemDanhLayout(dsBangDiemDanh);
+            }
+          }
+
+          return Center(child: new CircularProgressIndicator());
+        },
+      ),
       decoration: kMainCardBoxDecoration,
     );
   }

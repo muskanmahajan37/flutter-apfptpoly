@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../model/diem.dart';
+import '../model/bang_diem.dart';
 
 class DiemItem extends StatelessWidget {
   const DiemItem(
@@ -8,7 +8,7 @@ class DiemItem extends StatelessWidget {
         this.onTap,
       }) : super(key: key);
 
-  final Diem diem;
+  final BangDiem diem;
   final Function onTap;
 
   @override

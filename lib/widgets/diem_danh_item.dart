@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import '../model/diem_danh.dart';
+import '../model/bang_diem_danh.dart';
 
 class DiemDanhItem extends StatelessWidget {
   const DiemDanhItem({
     Key key,
-    this.diemDanh,
+    this.bangDiemDanh,
     this.onTap,
   }) : super(key: key);
 
-  final DiemDanh diemDanh;
+  final BangDiemDanh bangDiemDanh;
   final Function onTap;
 
   @override
@@ -20,7 +20,7 @@ class DiemDanhItem extends StatelessWidget {
         leading: Column(
           children: <Widget>[
             Text(
-              "${diemDanh.phanTramVang}%",
+              "${bangDiemDanh.phanTramVang}%",
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontWeight: FontWeight.bold,
@@ -28,7 +28,7 @@ class DiemDanhItem extends StatelessWidget {
               ),
             ),
             Text(
-              "V: ${diemDanh.tongVang}",
+              "V: ${bangDiemDanh.tongVang}",
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontWeight: FontWeight.bold,
@@ -37,13 +37,13 @@ class DiemDanhItem extends StatelessWidget {
             ),
           ],
         ),
-        title: Text(diemDanh.tenMon),
+        title: Text(bangDiemDanh.tenMon),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("Mã: ${diemDanh.maMon}"),
+            Text("Mã: ${bangDiemDanh.maMon}"),
             SizedBox(height: 2.0),
-            Text("Lớp: ${diemDanh.lop}"),
+            Text("Lớp: ${bangDiemDanh.lop}"),
           ],
         ),
         onTap: onTap,

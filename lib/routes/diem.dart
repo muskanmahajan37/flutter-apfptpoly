@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rounded_modal/rounded_modal.dart';
 import '../configs.dart';
-import '../model/diem.dart';
+import '../model/bang_diem.dart';
+import '../task/get_data.dart';
 import '../widgets/diem_item.dart';
 import '../widgets/list_item.dart';
 
@@ -13,50 +14,50 @@ class DiemScreen extends StatefulWidget {
 }
 
 class _DiemScreenState extends State<DiemScreen> {
-  List<Diem> dsDiem = List<Diem>.generate(10, (index) {
-    return const Diem(
+  List<BangDiem> dsDiem = List<BangDiem>.generate(10, (index) {
+    return const BangDiem(
       tenMon: "Lập trình Mobile đa nền tảng",
       trangThai: "PASSED",
       trungBinh: "9.2",
       maMon: "MOB306",
       lop: "PT12351-MOB",
-      chiTiet: <ChiTietDiem>[
-        ChiTietDiem(
+      dsDiem: <Diem>[
+        Diem(
           ten: "Đánh giá Assignment GĐ 1",
           trongSo: "10 %",
           diem: "9.5",
         ),
-        ChiTietDiem(
+        Diem(
           ten: "Đánh giá Assignment GĐ 2",
           trongSo: "10 %",
           diem: "9.5",
         ),
-        ChiTietDiem(
+        Diem(
           ten: "Lab 1",
           trongSo: "3.5 %",
           diem: "10.0",
         ),
-        ChiTietDiem(
+        Diem(
           ten: "Lab 2",
           trongSo: "3.5 %",
           diem: "10.0",
         ),
-        ChiTietDiem(
+        Diem(
           ten: "Lab 3",
           trongSo: "3.5 %",
           diem: "10.0",
         ),
-        ChiTietDiem(
+        Diem(
           ten: "Lab 4",
           trongSo: "3.5 %",
           diem: "10.0",
         ),
-        ChiTietDiem(
+        Diem(
           ten: "Lab 5",
           trongSo: "3.5 %",
           diem: "10.0",
         ),
-        ChiTietDiem(
+        Diem(
           ten: "Lab 6",
           trongSo: "3.5 %",
           diem: "10.0",
@@ -65,7 +66,7 @@ class _DiemScreenState extends State<DiemScreen> {
     );
   });
 
-  Widget _buildDiemModal(Diem diem) {
+  Widget _buildDiemModal(BangDiem diem) {
     return Container(
       child: Column(
         children: <Widget>[
@@ -95,10 +96,10 @@ class _DiemScreenState extends State<DiemScreen> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: diem.chiTiet.length,
+              itemCount: diem.dsDiem.length,
               physics: BouncingScrollPhysics(),
               itemBuilder: (_, index) {
-                final chiTiet = diem.chiTiet[index];
+                final chiTiet = diem.dsDiem[index];
 
                 return ListItem(
                   child: Row(
@@ -143,24 +144,40 @@ class _DiemScreenState extends State<DiemScreen> {
     );
   }
 
+  Widget _buildBangDiemLayout(List<BangDiem> dsBangDiem) {
+    return ListView.builder(
+      physics: BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
+      itemCount: dsBangDiem.length,
+      itemBuilder: (_, index) => DiemItem(
+        diem: dsBangDiem[index],
+        onTap: () {
+          showRoundedModalBottomSheet(
+            context: context,
+            color: Colors.white,
+            radius: 12.0,
+            builder: (_) => _buildDiemModal(dsBangDiem[index]),
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
-        itemCount: dsDiem.length,
-        itemBuilder: (_, index) => DiemItem(
-          diem: dsDiem[index],
-          onTap: () {
-            showRoundedModalBottomSheet(
-              context: context,
-              color: Colors.white,
-              radius: 12.0,
-              builder: (_) => _buildDiemModal(dsDiem[index]),
-            );
-          },
-        ),
+      child: FutureBuilder(
+        future: ApTask.getDanhSachDiem(),
+        builder: (_, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data != null) {
+              final List<BangDiem> dsBangDiem = snapshot.data;
+              return _buildBangDiemLayout(dsBangDiem);
+            }
+          }
+
+          return Center(child: new CircularProgressIndicator());
+        },
       ),
       decoration: kMainCardBoxDecoration,
     );
