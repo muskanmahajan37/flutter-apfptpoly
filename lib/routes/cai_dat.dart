@@ -22,12 +22,11 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
 
   AppSettings appSettings;
 
-  Period selectedPeriod = kPeriods[0];
+  Period selectedPeriod;
   Term selectedTerm;
 
   bool autoGetData = false;
   bool showAds = true;
-
 
   @override
   void initState() {
@@ -35,7 +34,12 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
       appSettings = settings;
 
       setState(() {
+        autoGetData = appSettings.isAutoGet;
+        showAds = appSettings.isShowAds;
         selectedTerm = appSettings.selectedTerm;
+        selectedPeriod = kPeriods.firstWhere(
+            (period) => period.value == appSettings.period,
+            orElse: () => kPeriods[0]);
       });
     });
     super.initState();
@@ -133,26 +137,37 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
           final period = kPeriods[index];
 
           return Container(
-              child: FlatButton(
-                padding: EdgeInsets.all(16.0),
-                child: Text(kPeriods[index].title,
-                    style: TextStyle(
-                        color: period == selectedPeriod
-                            ? Colors.deepOrange
-                            : Colors.black54)),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(index == 0 ? 12.0 : 0.0))),
-                onPressed: () {
-                  setState(() {
-                    selectedPeriod = kPeriods[index];
-                  });
-
-                  Navigator.pop(context);
-                },
+            child: FlatButton(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                kPeriods[index].title,
+                style: TextStyle(
+                  color: period == selectedPeriod
+                      ? Colors.deepOrange
+                      : Colors.black54,
+                ),
               ),
-              decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.black12))));
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(index == 0 ? 12.0 : 0.0),
+                ),
+              ),
+              onPressed: () {
+                appSettings.period = period.value;
+
+                setState(() {
+                  selectedPeriod = period;
+                });
+
+                Navigator.pop(context);
+              },
+            ),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Colors.black12),
+              ),
+            ),
+          );
         },
       ),
     );
@@ -168,33 +183,37 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
           final term = terms[index];
 
           return Container(
-              child: FlatButton(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  term.title,
-                  style: TextStyle(
-                    color: term.value == selectedTerm.value
-                        ? Colors.deepOrange
-                        : Colors.black54,
-                  ),
+            child: FlatButton(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                term.title,
+                style: TextStyle(
+                  color: term.value == selectedTerm.value
+                      ? Colors.deepOrange
+                      : Colors.black54,
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(index == 0 ? 12.0 : 0.0),
-                  ),
-                ),
-                onPressed: () {
-                  appSettings.selectedTermValue = term.value;
-
-                  setState(() {
-                    selectedTerm = term;
-                  });
-
-                  Navigator.pop(context);
-                },
               ),
-              decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.black12))));
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(index == 0 ? 12.0 : 0.0),
+                ),
+              ),
+              onPressed: () {
+                appSettings.selectedTermValue = term.value;
+
+                setState(() {
+                  selectedTerm = term;
+                });
+
+                Navigator.pop(context);
+              },
+            ),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Colors.black12),
+              ),
+            ),
+          );
         },
       ),
     );
@@ -335,15 +354,14 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
           ),
         ),
         _buildCard(
-          icon: Icons.exit_to_app,
-          text: "Đăng xuất",
-          onTap: () {
-            appSettings.isSignedIn = false;
-            appSettings.terms = null;
-            appSettings.selectedTermValue = null;
-            Navigator.of(context).pushReplacementNamed("/auth");
-          }
-        ),
+            icon: Icons.exit_to_app,
+            text: "Đăng xuất",
+            onTap: () {
+              appSettings.isSignedIn = false;
+              appSettings.terms = null;
+              appSettings.selectedTermValue = null;
+              Navigator.of(context).pushReplacementNamed("/auth");
+            }),
       ],
     );
   }
@@ -352,26 +370,26 @@ class _CaiDatScreenState extends State<CaiDatScreen> {
   Widget build(BuildContext context) {
     return Container(
       child: FutureBuilder(
-        future: Future.wait([
-          ApTask.getSinhVien(),
-          ApTask.getTerms(),
-        ]),
-        builder: (_, snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data != null) {
-              final SinhVien sinhVien = snapshot.data[0];
-              final List<Term> terms = snapshot.data[1];
+          future: Future.wait([
+            ApTask.getSinhVien(),
+            ApTask.getTerms(),
+          ]),
+          builder: (_, snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data != null) {
+                final SinhVien sinhVien = snapshot.data[0];
+                final List<Term> terms = snapshot.data[1];
 
-              if (appSettings.selectedTermValue == null) {
-                selectedTerm = appSettings.selectedTerm;
+                if (selectedTerm == null) {
+                  selectedTerm = appSettings.selectedTerm;
+                }
+
+                return _buildSinhVienLayout(sinhVien, terms);
               }
-
-              return _buildSinhVienLayout(sinhVien, terms);
             }
-          }
 
-          return Center(child: new CircularProgressIndicator());
-        }),
+            return Center(child: new CircularProgressIndicator());
+          }),
       decoration: kMainCardBoxDecoration,
     );
   }

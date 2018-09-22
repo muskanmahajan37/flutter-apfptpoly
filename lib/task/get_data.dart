@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:html/dom.dart';
@@ -98,6 +99,7 @@ class ApTask {
       return SinhVien();
     } catch (err) {
       print(err);
+      print(err.toString());
       return SinhVien();
     }
   }
@@ -105,9 +107,15 @@ class ApTask {
   static Future<List<Lich>> getLich() async {
     try {
       ApTask apTask = await getInstance();
-      final Response response = await apTask.dio.get(Urls.lich, data: {
-        "num_of_day": apTask.appSettings.period
-      });
+      final Response response = await apTask.dio.post(
+        Urls.lich,
+        options: Options(
+          contentType: ContentType("application", "x-www-form-urlencoded"),
+        ),
+        data: {
+          "num_of_day": apTask.appSettings.period
+        }
+      );
       final String body = response.data;
       final Document document = parse(body);
 

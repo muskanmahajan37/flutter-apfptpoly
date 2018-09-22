@@ -73,8 +73,12 @@ class AppSettings {
   }
 
   set terms(List<Term> terms) {
-    final String encodedTerms = terms.map((term) => term.toString()).join(";");
-    _sharedPreferences.setString(_kTermsKey, encodedTerms);
+    if (terms == null) {
+      _sharedPreferences.remove(_kTermsKey);
+    } else {
+      final String encodedTerms = terms.map((term) => term.toString()).join(";");
+      _sharedPreferences.setString(_kTermsKey, encodedTerms);
+    }
   }
 
 
@@ -82,7 +86,11 @@ class AppSettings {
   int get selectedTermValue => _sharedPreferences.getInt(_kSelectedTermKey);
 
   set selectedTermValue(int value) {
-    _sharedPreferences.setInt(_kSelectedTermKey, value);
+    if (value == null) {
+      _sharedPreferences.remove(_kSelectedTermKey);
+    } else {
+      _sharedPreferences.setInt(_kSelectedTermKey, value);
+    }
   }
 
   Term get selectedTerm {
@@ -90,15 +98,9 @@ class AppSettings {
     final termsCopy = terms;
 
     if (termsCopy == null || selectedTermValueCopy == null) {
-      return Term(0, "");
+      return null;
     }
 
-    final selectedTermIndex = termsCopy.indexWhere((term) => term.value == selectedTermValueCopy);
-
-    if (selectedTermIndex == -1) {
-      return Term(0, "");
-    }
-
-    return termsCopy[selectedTermIndex];
+    return termsCopy.firstWhere((term) => term.value == selectedTermValueCopy, orElse: () => null);
   }
 }

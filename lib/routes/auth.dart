@@ -47,13 +47,14 @@ class _AuthScreenState extends State<AuthScreen> {
       _loading = true;
     });
     webview.launch(
-        "http://ap.poly.edu.vn/choose_campus.php?campus_id=${_selectedCampus.id}",
-        clearCache: true,
-        clearCookies: true,
-        userAgent: kUserAgent,
-        hidden: true,
-        withJavascript: true,
-        withLocalStorage: true);
+      "http://ap.poly.edu.vn/choose_campus.php?campus_id=${_selectedCampus.id}",
+      clearCache: true,
+      clearCookies: true,
+      userAgent: kUserAgent,
+      hidden: true,
+      withJavascript: true,
+      withLocalStorage: true,
+    );
   }
 
   _onWebviewStateChanged(WebViewStateChanged state) async {
