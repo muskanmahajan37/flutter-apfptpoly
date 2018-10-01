@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import '../utils/app_settings.dart';
-import '../utils/cookie_handler.dart';
-import '../task/get_data.dart';
+
 import '../configs.dart';
 import '../model/campus.dart';
+import '../task/get_data.dart';
+import '../utils/app_settings.dart';
+import '../utils/cookie_handler.dart';
 import '../widgets/logo.dart';
 import '../widgets/visible.dart';
 
@@ -46,12 +47,13 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       _loading = true;
     });
+
     webview.launch(
       "http://ap.poly.edu.vn/choose_campus.php?campus_id=${_selectedCampus.id}",
-      clearCache: true,
-      clearCookies: true,
       userAgent: kUserAgent,
       hidden: true,
+      clearCache: true,
+      clearCookies: true,
       withJavascript: true,
       withLocalStorage: true,
     );
@@ -65,23 +67,30 @@ class _AuthScreenState extends State<AuthScreen> {
 
     try {
       switch (type) {
-        case WebViewState.startLoad:
+        case WebViewState.shouldStart:
           if (url.startsWith(LoginStatus.authDone)) {
             webview.hide();
             final cookies = await webview.getCookies();
             cookieHandler.saveCookies("https://wwww.google.com", cookies);
-            setState(() { _loading = true; });
+            setState(() {
+              _loading = true;
+            });
           }
+          break;
+
+        case WebViewState.startLoad:
           break;
 
         case WebViewState.finishLoad:
           if (url == LoginStatus.finishedChoosingCampus) {
-            webview.close();
-            webview.launch("http://ap.poly.edu.vn/hlogin.php?provider=Google",
+            webview.launch(
+              "http://ap.poly.edu.vn/hlogin.php?provider=Google",
               userAgent: kUserAgent,
               withJavascript: true,
               withLocalStorage: true,
             );
+          } else if (url.startsWith(LoginStatus.startLogin)) {
+            webview.show();
           } else if (url.contains(LoginStatus.wrongAccount)) {
             webview.hide();
             print('wrong account');
@@ -96,14 +105,13 @@ class _AuthScreenState extends State<AuthScreen> {
             cookieHandler.saveCookies("http://ap.poly.edu.vn", cookies);
 
             final sinhVien = await ApTask.getSinhVien();
-            await ApTask.registerAccount(sinhVien.tenDangNhap, cookieHandler.readCookies("http://ap.poly.edu.vn"));
+            await ApTask.registerAccount(sinhVien.tenDangNhap,
+                cookieHandler.readCookies("http://ap.poly.edu.vn"));
 
             appSettings.isSignedIn = true;
             Navigator.of(context).pushReplacementNamed('/main');
           }
           break;
-
-        case WebViewState.shouldStart:
       }
     } catch (err) {
       print(err);

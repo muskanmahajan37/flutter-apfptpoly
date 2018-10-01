@@ -14,6 +14,24 @@ class BangDiem {
     this.lop = "",
     this.dsDiem = const [],
   });
+
+  BangDiem.fromJson(Map<String, dynamic> json)
+    : tenMon = json["tenMon"],
+      maMon = json["maMon"],
+      lop = json["lop"],
+      trangThai = json["trangThai"],
+      trungBinh = json["trungBinh"],
+      dsDiem = json["dsDiem"].map<Diem>((diem) => Diem.fromJson(diem)).toList();
+
+  Map<String, dynamic> toJson() =>
+      {
+        "tenMon": tenMon,
+        "maMon": maMon,
+        "lop": lop,
+        "trangThai": trangThai,
+        "trungBinh": trungBinh,
+        "dsDiem": dsDiem.map((diem) => diem.toJson()).toList(),
+      };
 }
 
 class Diem {
@@ -28,4 +46,18 @@ class Diem {
     this.diem = "",
     this.ghiChu = "",
   });
+
+  Diem.fromJson(Map<String, dynamic> json)
+    : ten = json["ten"],
+      trongSo = json["trongSo"],
+      diem = json["diem"],
+      ghiChu = json["ghiChu"];
+
+  Map<String, dynamic> toJson() =>
+      {
+        "ten": ten,
+        "trongSo": trongSo,
+        "diem": diem,
+        "ghiChu": ghiChu,
+      };
 }

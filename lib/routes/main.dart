@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+
 import '../widgets/visible.dart';
-import './lich.dart';
-import './diem_danh.dart';
-import './diem.dart';
-import './cai_dat.dart';
+import 'cai_dat/cai_dat_view.dart';
+import 'diem/diem_view.dart';
+import 'diem_danh/diem_danh_view.dart';
+import 'lich/lich_view.dart';
 
 class MainScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
+class _MainScreenState extends State<MainScreen> {
   final FlutterWebviewPlugin webview = new FlutterWebviewPlugin();
 
   int _selectedTab = 0;

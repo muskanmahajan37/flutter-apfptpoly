@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 
@@ -47,28 +48,23 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
 
   void _initAnimations() {
     final rippleSizeTween = new SizeTween(
-        begin: Size.square(_kMinRippleSize),
-        end: Size.square(_kMaxRippleSize));
+        begin: Size.square(_kMinRippleSize), end: Size.square(_kMaxRippleSize));
 
     final logoSizeTween = new SizeTween(
         begin: Size.square(_kMinRippleSize),
         end: Size.square(_kMinRippleSize + _kRipplePadding / 2));
 
-    final colorTween = new ColorTween(
-        begin: Colors.white,
-        end: Colors.white.withOpacity(0.0));
+    final colorTween =
+        new ColorTween(begin: Colors.white, end: Colors.white.withOpacity(0.0));
 
     rippleController = new AnimationController(
-        duration: Duration(milliseconds: _kRippleAnimationTime),
-        vsync: this);
+        duration: Duration(milliseconds: _kRippleAnimationTime), vsync: this);
 
     sizeController = new AnimationController(
-        duration: Duration(milliseconds: _kSizeAnimationTime),
-        vsync: this);
+        duration: Duration(milliseconds: _kSizeAnimationTime), vsync: this);
 
-    curveAnimation = new CurvedAnimation(
-        parent: rippleController,
-        curve: Curves.ease);
+    curveAnimation =
+        new CurvedAnimation(parent: rippleController, curve: Curves.ease);
 
     rippleSizeAnimation = rippleSizeTween.animate(curveAnimation);
     logoSizeAnimation = logoSizeTween.animate(sizeController);
@@ -82,8 +78,7 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     if (widget.loading && (timer == null || !timer.isActive)) {
-      timer = new Timer.periodic(
-          Duration(milliseconds: _kAnimationTime),
+      timer = new Timer.periodic(Duration(milliseconds: _kAnimationTime),
           (Timer t) {
         sizeController?.forward();
 

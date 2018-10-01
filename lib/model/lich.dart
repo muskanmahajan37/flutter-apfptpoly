@@ -22,6 +22,31 @@ class Lich {
     this.lop = "",
     this.chiTiet = const ChiTietLich(),
   });
+
+  Lich.fromJson(Map<String, dynamic> json)
+      : slot = json["slot"],
+        thoiGian = json["thoiGian"],
+        ngay = json["ngay"],
+        phong = json["phong"],
+        lop = json["lop"],
+        giangDuong = json["giangDuong"],
+        maMon = json["maMon"],
+        tenMon = json["tenMon"],
+        giangVien = json["giangVien"],
+        chiTiet = ChiTietLich.fromJson(json["chiTiet"]);
+
+  Map<String, dynamic> toJson() => {
+        "slot": slot,
+        "thoiGian": thoiGian,
+        "ngay": ngay,
+        "phong": phong,
+        "lop": lop,
+        "giangDuong": giangDuong,
+        "maMon": maMon,
+        "tenMon": tenMon,
+        "giangVien": giangVien,
+        "chiTiet": chiTiet.toJson(),
+      };
 }
 
 class ChiTietLich {
@@ -36,4 +61,17 @@ class ChiTietLich {
     this.hocLieu = "",
     this.taiLieu = "",
   });
+
+  ChiTietLich.fromJson(Map<String, dynamic> json)
+      : noiDung = json["noiDung"],
+        nhiemVu = json["nhiemVu"],
+        hocLieu = json["hocLieu"],
+        taiLieu = json["taiLieu"];
+
+  Map<String, dynamic> toJson() => {
+        "noiDung": noiDung,
+        "nhiemVu": nhiemVu,
+        "hocLieu": hocLieu,
+        "taiLieu": taiLieu,
+      };
 }

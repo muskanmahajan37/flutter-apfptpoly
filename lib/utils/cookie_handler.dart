@@ -1,5 +1,6 @@
-import 'dart:io';
 import 'dart:async';
+import 'dart:io';
+
 import 'package:path_provider/path_provider.dart';
 
 class CookieHandler {
@@ -15,9 +16,10 @@ class CookieHandler {
   }
 
   File getFile(String url) {
-    final String filename = url.replaceAll(new RegExp(r"(https|http|:\/\/|\.)"), "");
+    final String filename =
+        url.replaceAll(new RegExp(r"(https|http|:\/\/|\.)"), "");
     File file = new File("${cookieDir.path}/$filename");
-    if (file.existsSync()) {
+    if (!file.existsSync()) {
       file.createSync();
     }
     return file;
@@ -25,7 +27,10 @@ class CookieHandler {
 
   void saveCookies(String url, Map<String, String> cookies) {
     final File file = getFile(url);
-    final String content = cookies.keys.map((key) => "${key.replaceAll("\"", "")}=${cookies[key].replaceAll("\"", "")}").join("; ");
+    final String content = cookies.keys
+        .map((key) =>
+            "${key.replaceAll("\"", "")}=${cookies[key].replaceAll("\"", "")}")
+        .join("; ");
     file.writeAsStringSync(content);
   }
 
@@ -39,7 +44,9 @@ class CookieHandler {
     final cookies = <Cookie>[];
 
     if (cookieString?.isNotEmpty == true) {
-      cookieString.split(new RegExp(r";[\n\r\s]+", multiLine: true)).forEach((String cookie) {
+      cookieString
+          .split(new RegExp(r";[\n\r\s]+", multiLine: true))
+          .forEach((String cookie) {
         final splited = cookie.split('=');
         cookies.add(new Cookie(splited[0], splited[1]));
       });

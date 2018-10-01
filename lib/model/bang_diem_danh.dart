@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class BangDiemDanh {
   final String tenMon;
   final String tongVang;
@@ -14,6 +16,24 @@ class BangDiemDanh {
     this.lop = "",
     this.dsDiemDanh = const [],
   });
+
+  BangDiemDanh.fromJson(Map<String, dynamic> json)
+    : tenMon = json["tenMon"],
+      tongVang = json["tongVang"],
+      phanTramVang = json["phanTramVang"],
+      maMon = json["maMon"],
+      lop = json["lop"],
+      dsDiemDanh = json["dsDiemDanh"].map<DiemDanh>((diemDanh) => DiemDanh.fromJson(diemDanh)).toList();
+
+  Map<String, dynamic> toJson() =>
+      {
+        "tenMon": tenMon,
+        "tongVang": tongVang,
+        "phanTramVang": phanTramVang,
+        "maMon": maMon,
+        "lop": lop,
+        "dsDiemDanh": dsDiemDanh.map((diemDanh) => diemDanh.toJson()).toList(),
+      };
 }
 
 class DiemDanh {
@@ -34,4 +54,25 @@ class DiemDanh {
     this.trangThai = "",
     this.ghiChu = "",
   });
+
+
+  DiemDanh.fromJson(Map<String, dynamic> json)
+    : baiHoc = json["baiHoc"],
+      ngay = json["ngay"],
+      ca = json["ca"],
+      nguoiDiemDanh = json["nguoiDiemDanh"],
+      moTa = json["moTa"],
+      trangThai = json["trangThai"],
+      ghiChu = json["ghiChu"];
+
+  Map<String, dynamic> toJson() =>
+      {
+        "baiHoc": baiHoc,
+        "ngay": ngay,
+        "ca": ca,
+        "nguoiDiemDanh": nguoiDiemDanh,
+        "moTa": moTa,
+        "trangThai": trangThai,
+        "ghiChu": ghiChu,
+      };
 }
