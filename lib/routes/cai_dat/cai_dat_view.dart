@@ -126,6 +126,26 @@ class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
     );
   }
 
+  Widget _buildCredit() {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Column(
+        children: <Widget>[
+          Text(
+            "By hungps with love <3",
+            style: TextStyle(color: Colors.black45),
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            "fb.com/scitbiz",
+            style: TextStyle(color: Colors.black45),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildSinhVien() {
     return ListView(
       physics: const BouncingScrollPhysics(),
@@ -251,6 +271,7 @@ class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
             });
           },
         ),
+        _buildCredit(),
       ],
     );
   }
