@@ -1,4 +1,5 @@
 class Lich {
+  final bool isTestDay;
   final String slot;
   final String thoiGian;
   final String ngay;
@@ -11,6 +12,7 @@ class Lich {
   final ChiTietLich chiTiet;
 
   const Lich({
+    this.isTestDay,
     this.ngay = "",
     this.giangDuong = "",
     this.maMon = "",
@@ -24,7 +26,8 @@ class Lich {
   });
 
   Lich.fromJson(Map<String, dynamic> json)
-      : slot = json["slot"],
+      : isTestDay = json["isTestDay"],
+        slot = json["slot"],
         thoiGian = json["thoiGian"],
         ngay = json["ngay"],
         phong = json["phong"],
@@ -36,6 +39,7 @@ class Lich {
         chiTiet = ChiTietLich.fromJson(json["chiTiet"]);
 
   Map<String, dynamic> toJson() => {
+        "isTestDay": isTestDay,
         "slot": slot,
         "thoiGian": thoiGian,
         "ngay": ngay,

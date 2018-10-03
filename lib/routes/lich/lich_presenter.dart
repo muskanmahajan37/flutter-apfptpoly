@@ -11,17 +11,31 @@ class LichPresenter {
     AppSettings.getInstance().then((settings) {
       appSettings = settings;
 
-      final dsGroupLich = getDsGroupLichFrom(appSettings.dsLich);
-      _view.onLichReceived(dsGroupLich);
+      if (appSettings.isAutoGet) {
+        getLich();
+      } else {
+        final dsGroupLich = getDsGroupLichFrom(appSettings.dsLich);
+        _view.onLichReceived(dsGroupLich);
+      }
     });
   }
 
-  void getLich() {
-    ApTask.getLich()
-      .then((dsLich) {
+  void getLich() async {
+    try {
+      final isConnected = await getNetworkState();
+      if (isConnected) {
+        final dsLich = await ApTask.getLich();
         final dsGroupLich = getDsGroupLichFrom(dsLich);
         _view.onLichReceived(dsGroupLich);
-      })
-      .catchError((err) => _view.onError(err));
+      } else {
+        final dsGroupLich = getDsGroupLichFrom(appSettings.dsLich);
+        _view.onLichReceived(dsGroupLich);
+      }
+    } catch (err) {
+      print(err);
+      _view.onError("Lỗi không xác định!", err);
+      final dsGroupLich = getDsGroupLichFrom(appSettings.dsLich);
+      _view.onLichReceived(dsGroupLich);
+    }
   }
 }

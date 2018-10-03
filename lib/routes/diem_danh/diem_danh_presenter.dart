@@ -1,3 +1,5 @@
+import 'package:apfptpoly/utils/utils.dart';
+
 import '../../task/get_data.dart';
 import '../../utils/app_settings.dart';
 import 'diem_danh_contract.dart';
@@ -10,13 +12,27 @@ class DiemDanhPresenter {
     AppSettings.getInstance().then((settings) {
       appSettings = settings;
 
-      _view.onBangDiemDanhReceived(appSettings.dsBangDiemDanh);
+      if (appSettings.isAutoGet) {
+        getBangDiemDanh();
+      } else {
+        _view.onBangDiemDanhReceived(appSettings.dsBangDiemDanh);
+      }
     });
   }
 
-  void getBangDiem() {
-    ApTask.getDsBangDiemDanh().then((dsBangDiemDanh) {
-      _view.onBangDiemDanhReceived(dsBangDiemDanh);
-    });
+  void getBangDiemDanh() async {
+    try {
+      final isConnected = await getNetworkState();
+      if (isConnected) {
+        final dsBangDiemDanh = await ApTask.getDsBangDiemDanh();
+        _view.onBangDiemDanhReceived(dsBangDiemDanh);
+      } else {
+        _view.onBangDiemDanhReceived(appSettings.dsBangDiemDanh);
+      }
+    } catch (err) {
+      print(err);
+      _view.onError("Lỗi không xác định!", err);
+      _view.onBangDiemDanhReceived(appSettings.dsBangDiemDanh);
+    }
   }
 }

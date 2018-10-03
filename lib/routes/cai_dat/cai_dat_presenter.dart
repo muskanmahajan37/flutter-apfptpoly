@@ -1,3 +1,5 @@
+import 'package:apfptpoly/utils/utils.dart';
+
 import '../../configs.dart';
 import '../../model/term.dart';
 import '../../task/get_data.dart';
@@ -12,9 +14,14 @@ class CaiDatPresenter {
     AppSettings.getInstance().then((settings) {
       _appSettings = settings;
 
+      if (_appSettings.isAutoGet) {
+        getSinhVien();
+      } else {
+        _view.onSinhVienReceived(_appSettings.sinhVien);
+      }
+
       _view.onAutoGetChanged(_appSettings.isAutoGet);
       _view.onShowAdsChanged(_appSettings.isShowAds);
-      _view.onSinhVienReceived(_appSettings.sinhVien);
       _view.onTermsReceived(_appSettings.terms);
       _view.onSelectedTermChanged(_appSettings.selectedTerm);
       _view.onSelectedPeriodChanged(kPeriods.firstWhere(
@@ -23,11 +30,23 @@ class CaiDatPresenter {
     });
   }
 
-  void getSinhVien() {
+  void getSinhVien() async {
+    try {
+      final isConnected = await getNetworkState();
+      if (isConnected) {
+        final sinhVien = await ApTask.getSinhVien();
+        _view.onSinhVienReceived(sinhVien);
+      } else {
+        _view.onSinhVienReceived(_appSettings.sinhVien);
+      }
+    } catch (err) {
+      print(err);
+      _view.onError("Lỗi không xác định!", err);
+      _view.onSinhVienReceived(_appSettings.sinhVien);
+    }
+
     ApTask.getSinhVien().then((sinhVien) {
       _view.onSinhVienReceived(sinhVien);
-      _view.onTermsReceived(_appSettings.terms);
-      _view.onSelectedTermChanged(_appSettings.selectedTerm);
     });
   }
 

@@ -1,3 +1,5 @@
+import 'package:apfptpoly/utils/utils.dart';
+import 'package:apfptpoly/widgets/alert_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
@@ -16,6 +18,22 @@ class _MainScreenState extends State<MainScreen> {
   final FlutterWebviewPlugin webview = new FlutterWebviewPlugin();
 
   int _selectedTab = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getNetworkState().then((isConnected) {
+      if (!isConnected) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertMessage(
+                title: "Lỗi",
+                content: "Không có kết nối internet!",
+              ),
+        );
+      }
+    });
+  }
 
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
@@ -45,12 +63,9 @@ class _MainScreenState extends State<MainScreen> {
         ]);
   }
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey,
         backgroundColor: Theme.of(context).primaryColor,
         appBar: AppBar(
           title: Text("AP FPT Poly"),

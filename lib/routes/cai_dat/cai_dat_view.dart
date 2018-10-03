@@ -1,3 +1,5 @@
+import 'package:apfptpoly/widgets/alert_message.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_modal/rounded_modal.dart';
 
@@ -34,7 +36,6 @@ class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
     super.initState();
 
     _presenter = CaiDatPresenter(this);
-    _presenter.getSinhVien();
   }
 
   @override
@@ -82,6 +83,27 @@ class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
   @override
   void closeModal() {
     Navigator.of(context).pop();
+  }
+
+  @override
+  void onError(message, err) {
+    if (err is DioError) {
+      final int statusCode = err.response.statusCode;
+      if (statusCode == 404 || statusCode == 403) {
+        AppSettings.getInstance().then((settings) {
+          settings.resetSettings();
+          Navigator.of(context).pushReplacementNamed("/auth");
+        });
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertMessage(
+              title: "Lỗi",
+              content: message,
+            ),
+      );
+    }
   }
 
   Widget _buildCard({
@@ -236,7 +258,7 @@ class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: _sinhVien == null && _terms == null ? Loading() : _buildSinhVien(),
+      child: _sinhVien == null || _terms == null ? Loading() : _buildSinhVien(),
       decoration: kMainCardBoxDecoration,
     );
   }

@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
+
 import '../model/group_lich.dart';
 import '../model/lich.dart';
 
@@ -16,5 +20,18 @@ List<GroupLich> getDsGroupLichFrom(List<Lich> dsLich) {
     }
   });
 
-  return rawGroup.keys.map((date) => GroupLich(date: date, dsLich: rawGroup[date])).toList();
+  return rawGroup.keys
+      .map((date) => GroupLich(date: date, dsLich: rawGroup[date]))
+      .toList();
+}
+
+Future<bool> getNetworkState() async {
+  try {
+    final ConnectivityResult connectivityResult =
+        await (new Connectivity().checkConnectivity());
+    return connectivityResult != ConnectivityResult.none;
+  } catch (err) {
+    print(err);
+    return false;
+  }
 }

@@ -132,7 +132,12 @@ class ApTask {
         }
 
         return Lich(
-            ngay: eTds[0].text.trim().replaceAll("ngày ", ""),
+            isTestDay: eTds[0].text.contains("(if not passed)"),
+            ngay: eTds[0]
+                .text
+                .replaceAll("ngày ", "")
+                .replaceAll(" (if not passed)", "")
+                .trim(),
             phong: eTds[1].text.trim(),
             giangDuong: eTds[2].text.trim(),
             maMon: eTds[3].text.trim(),

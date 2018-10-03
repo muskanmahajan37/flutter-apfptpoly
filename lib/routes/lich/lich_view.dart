@@ -1,3 +1,4 @@
+import 'package:apfptpoly/widgets/alert_message.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_modal/rounded_modal.dart';
@@ -27,7 +28,6 @@ class _LichScreenState extends State<LichScreen> implements LichContract {
     super.initState();
 
     _presenter = new LichPresenter(this);
-    _presenter.getLich();
   }
 
   @override
@@ -38,7 +38,7 @@ class _LichScreenState extends State<LichScreen> implements LichContract {
   }
 
   @override
-  void onError(err) {
+  void onError(message, err) {
     if (err is DioError) {
       final int statusCode = err.response.statusCode;
       if (statusCode == 404 || statusCode == 403) {
@@ -47,7 +47,15 @@ class _LichScreenState extends State<LichScreen> implements LichContract {
           Navigator.of(context).pushReplacementNamed("/auth");
         });
       }
-    } else {}
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertMessage(
+              title: "Lỗi",
+              content: message,
+            ),
+      );
+    }
   }
 
   Widget _buildGroupLich() {

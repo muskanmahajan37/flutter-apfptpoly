@@ -3,7 +3,6 @@ import '../../model/sinh_vien.dart';
 import '../../model/term.dart';
 
 abstract class CaiDatContract {
-
   void onTermsReceived(List<Term> terms);
 
   void onSinhVienReceived(SinhVien sinhVien);
@@ -16,6 +15,7 @@ abstract class CaiDatContract {
 
   void onSelectedTermChanged(Term term);
 
-  void closeModal() {}
+  void closeModal();
 
+  void onError(String message, err);
 }

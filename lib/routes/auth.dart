@@ -1,3 +1,5 @@
+import 'package:apfptpoly/utils/utils.dart';
+import 'package:apfptpoly/widgets/alert_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
@@ -15,6 +17,8 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  static final kClearCookiesJS =
+      'for(var cookies=document.cookie.split(";"),i=0;i<cookies.length;i++){var cookie=cookies[i],eqPos=cookie.indexOf("="),name=eqPos>-1?cookie.substr(0,eqPos):cookie;document.cookie=name+"=;expires=Thu, 01 Jan 1970 00:00:00 GMT"}';
   final FlutterWebviewPlugin webview = new FlutterWebviewPlugin();
   final CookieHandler cookieHandler = new CookieHandler();
 
@@ -43,20 +47,42 @@ class _AuthScreenState extends State<AuthScreen> {
     super.dispose();
   }
 
-  _onLoginPress() {
-    setState(() {
-      _loading = true;
-    });
+  _onLoginPress() async {
+    try {
+      final isConnected = await getNetworkState();
+      if (isConnected) {
+        setState(() {
+          _loading = true;
+        });
 
-    webview.launch(
-      "http://ap.poly.edu.vn/choose_campus.php?campus_id=${_selectedCampus.id}",
-      userAgent: kUserAgent,
-      hidden: true,
-      clearCache: true,
-      clearCookies: true,
-      withJavascript: true,
-      withLocalStorage: true,
-    );
+        webview.launch(
+          "http://ap.poly.edu.vn/choose_campus.php?campus_id=${_selectedCampus.id}",
+          userAgent: kUserAgent,
+          headers: {"Cookie": ""},
+          hidden: true,
+          clearCache: true,
+          clearCookies: true,
+          withJavascript: true,
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertMessage(
+                title: "Lỗi",
+                content: "Không có kết nối internet!",
+              ),
+        );
+      }
+    } catch (err) {
+      print(err);
+      showDialog(
+        context: context,
+        builder: (context) => AlertMessage(
+              title: "Lỗi",
+              content: "Lỗi không xác định: " + err.message,
+            ),
+      );
+    }
   }
 
   _onWebviewStateChanged(WebViewStateChanged state) async {
@@ -66,57 +92,137 @@ class _AuthScreenState extends State<AuthScreen> {
     final url = state.url;
 
     try {
-      switch (type) {
-        case WebViewState.shouldStart:
-          if (url.startsWith(LoginStatus.authDone)) {
-            webview.hide();
-            final cookies = await webview.getCookies();
-            cookieHandler.saveCookies("https://wwww.google.com", cookies);
-            setState(() {
-              _loading = true;
-            });
-          }
-          break;
+      if (Theme.of(context).platform == TargetPlatform.iOS) {
+        switch (type) {
+          case WebViewState.shouldStart:
+            if (url.startsWith(LoginStatus.authDone)) {
+              webview.hide();
+              final cookies = await webview.getCookies();
+              cookieHandler.saveCookies("https://wwww.google.com", cookies);
+              setState(() {
+                _loading = true;
+              });
+            }
+            break;
 
-        case WebViewState.startLoad:
-          break;
+          case WebViewState.startLoad:
+            break;
 
-        case WebViewState.finishLoad:
-          if (url == LoginStatus.finishedChoosingCampus) {
-            webview.launch(
-              "http://ap.poly.edu.vn/hlogin.php?provider=Google",
-              userAgent: kUserAgent,
-              withJavascript: true,
-              withLocalStorage: true,
-            );
-          } else if (url.startsWith(LoginStatus.startLogin)) {
-            webview.show();
-          } else if (url.contains(LoginStatus.wrongAccount)) {
-            webview.hide();
-            print('wrong account');
-          } else if (url.contains(LoginStatus.loginFailed)) {
-            webview.hide();
+          case WebViewState.finishLoad:
+            if (url == LoginStatus.finishedChoosingCampus) {
+              webview.launch(
+                "http://ap.poly.edu.vn/hlogin.php?provider=Google",
+                userAgent: kUserAgent,
+                withJavascript: true,
+              );
+            } else if (url.startsWith(LoginStatus.startLogin)) {
+              webview.show();
+            } else if (url.contains(LoginStatus.wrongAccount)) {
+              webview.close();
+              print('wrong account');
+              setState(() {
+                _loading = false;
+              });
+              showDialog(
+                context: context,
+                builder: (context) => AlertMessage(
+                      title: "Lỗi",
+                      content: "Tài khoản này không thuộc FPT Polytechnic!",
+                    ),
+              );
+            } else if (url.contains(LoginStatus.loginFailed)) {
+              webview.close();
+              print('login failed');
+              setState(() {
+                _loading = false;
+              });
+              showDialog(
+                context: context,
+                builder: (context) => AlertMessage(
+                      title: "Lỗi",
+                      content: "Cơ sở học không đúng, vui lòng chọn lại!",
+                    ),
+              );
+            } else if (url.contains(LoginStatus.loginSuccess)) {
+              print('login completed');
 
-            print('login failed');
-          } else if (url.contains(LoginStatus.loginSuccess)) {
-            print('login completed');
+              final cookies = await webview.getCookies();
+              cookieHandler.saveCookies("http://ap.poly.edu.vn", cookies);
 
-            final cookies = await webview.getCookies();
-            cookieHandler.saveCookies("http://ap.poly.edu.vn", cookies);
+              final sinhVien = await ApTask.getSinhVien();
+              await ApTask.registerAccount(sinhVien.tenDangNhap,
+                  cookieHandler.readCookies("http://ap.poly.edu.vn"));
 
-            final sinhVien = await ApTask.getSinhVien();
-            await ApTask.registerAccount(sinhVien.tenDangNhap,
-                cookieHandler.readCookies("http://ap.poly.edu.vn"));
+              appSettings.isSignedIn = true;
+              Navigator.of(context).pushReplacementNamed('/main');
+            }
+            break;
+        }
+      } else {
+        switch (type) {
+          case WebViewState.startLoad:
+            if (url.startsWith(LoginStatus.authDone)) {
+              webview.hide();
+              final cookies = await webview.getCookies();
+              cookieHandler.saveCookies("https://wwww.google.com", cookies);
+              setState(() {
+                _loading = true;
+              });
+            }
+            break;
 
-            appSettings.isSignedIn = true;
-            Navigator.of(context).pushReplacementNamed('/main');
-          }
-          break;
+          case WebViewState.finishLoad:
+            if (url == LoginStatus.finishedChoosingCampus) {
+              webview.close();
+              webview.launch(
+                "http://ap.poly.edu.vn/hlogin.php?provider=Google",
+                userAgent: kUserAgent,
+                withJavascript: true,
+                withLocalStorage: true,
+              );
+            } else if (url.contains(LoginStatus.wrongAccount)) {
+              webview.close();
+              print('wrong account');
+              showDialog(
+                context: context,
+                builder: (context) => AlertMessage(
+                      title: "Lỗi",
+                      content: "Tài khoản này không thuộc FPT Polytechnic!",
+                    ),
+              );
+            } else if (url.contains(LoginStatus.loginFailed)) {
+              webview.hide();
+              print('login failed');
+              showDialog(
+                context: context,
+                builder: (context) => AlertMessage(
+                      title: "Lỗi",
+                      content: "Cơ sở học không đúng, vui lòng chọn lại!",
+                    ),
+              );
+            } else if (url.contains(LoginStatus.loginSuccess)) {
+              print('login completed');
+              final cookies = await webview.getCookies();
+              cookieHandler.saveCookies("http://ap.poly.edu.vn", cookies);
+
+              final sinhVien = await ApTask.getSinhVien();
+              await ApTask.registerAccount(sinhVien.tenDangNhap,
+                  cookieHandler.readCookies("http://ap.poly.edu.vn"));
+
+              appSettings.isSignedIn = true;
+              Navigator.of(context).pushReplacementNamed('/main');
+            }
+            break;
+
+          case WebViewState.shouldStart:
+        }
       }
     } catch (err) {
       print(err);
     }
   }
+
+  Widget _buildErrorDialog() {}
 
   @override
   Widget build(BuildContext context) {

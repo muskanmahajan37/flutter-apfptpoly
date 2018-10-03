@@ -4,7 +4,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 
 class Logo extends StatefulWidget {
-  const Logo({this.loading = false});
+  Logo({this.loading = false});
 
   final bool loading;
 
@@ -41,6 +41,8 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
   void dispose() {
     rippleController?.dispose();
     sizeController?.dispose();
+    curveAnimation.removeStatusListener((_) => _animationListener);
+    logoSizeAnimation.removeStatusListener((_) => _animationListener);
     timer?.cancel();
 
     super.dispose();
@@ -69,10 +71,27 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
     rippleSizeAnimation = rippleSizeTween.animate(curveAnimation);
     logoSizeAnimation = logoSizeTween.animate(sizeController);
     colorAnimation = colorTween.animate(curveAnimation);
+  }
 
-    // call setState() for each animation frame to update the view
-    curveAnimation.addListener(() => setState(() {}));
-    logoSizeAnimation.addListener(() => setState(() {}));
+  @override
+  void didUpdateWidget(Logo oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.loading && !widget.loading) {
+      timer?.cancel();
+      curveAnimation.removeStatusListener((_) => _animationListener);
+      logoSizeAnimation.removeStatusListener((_) => _animationListener);
+      print("stop");
+    } else {
+      print("start");
+      // call setState() for each animation frame to update the view
+      curveAnimation.addListener(_animationListener);
+      logoSizeAnimation.addListener(_animationListener);
+    }
+  }
+
+  void _animationListener() {
+    setState(() {});
   }
 
   @override

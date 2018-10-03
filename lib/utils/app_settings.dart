@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../model/bang_diem.dart';
 import '../model/bang_diem_danh.dart';
 import '../model/lich.dart';
@@ -33,42 +35,36 @@ class AppSettings {
     return _appSettings;
   }
 
-
   // Student's signin status
   bool get isSignedIn => _sharedPreferences.getBool(_kSignedInKey) ?? false;
 
-  set isSignedIn(bool value) => _sharedPreferences.setBool(_kSignedInKey, value);
-
+  set isSignedIn(bool value) =>
+      _sharedPreferences.setBool(_kSignedInKey, value);
 
   // Lich's period
   int get period => _sharedPreferences.getInt(_kPeriod) ?? 7;
 
   set period(int value) => _sharedPreferences.setInt(_kPeriod, value);
 
-
   // Enable auto get data
-  bool get isAutoGet => _sharedPreferences.getBool(_kAutoGetKey) ?? false;
+  bool get isAutoGet => _sharedPreferences.getBool(_kAutoGetKey) ?? true;
 
   set isAutoGet(bool value) => _sharedPreferences.setBool(_kAutoGetKey, value);
-
 
   // Show ads
   bool get isShowAds => _sharedPreferences.getBool(_kShowAdsKey) ?? true;
 
   set isShowAds(bool value) => _sharedPreferences.setBool(_kShowAdsKey, value);
 
-
   // List of terms for Diem & Diem Danh (Eg: Summer 2017)
   List<Term> get terms {
     try {
       final String encodedTerms = _sharedPreferences.getString(_kTermsKey);
-      return encodedTerms
-        .split(";")
-        .map((termPair) {
-          final term = termPair.split("=");
-          return Term(int.parse(term[0]), term[1]);
-        }).toList();
-    } catch(err) {
+      return encodedTerms.split(";").map((termPair) {
+        final term = termPair.split("=");
+        return Term(int.parse(term[0]), term[1]);
+      }).toList();
+    } catch (err) {
       print(err);
       return [];
     }
@@ -78,11 +74,11 @@ class AppSettings {
     if (terms == null) {
       _sharedPreferences.remove(_kTermsKey);
     } else {
-      final String encodedTerms = terms.map((term) => term.toString()).join(";");
+      final String encodedTerms =
+          terms.map((term) => term.toString()).join(";");
       _sharedPreferences.setString(_kTermsKey, encodedTerms);
     }
   }
-
 
   // Selected term
   int get selectedTermValue => _sharedPreferences.getInt(_kSelectedTermKey);
@@ -103,9 +99,9 @@ class AppSettings {
       return null;
     }
 
-    return termsCopy.firstWhere((term) => term.value == selectedTermValueCopy, orElse: () => null);
+    return termsCopy.firstWhere((term) => term.value == selectedTermValueCopy,
+        orElse: () => null);
   }
-
 
   // Save SinhVien
   SinhVien get sinhVien {
@@ -125,14 +121,15 @@ class AppSettings {
     _sharedPreferences.setString(_kSinhVien, str);
   }
 
-
   // Save dsLich
   List<Lich> get dsLich {
     try {
       final str = _sharedPreferences.getString(_kLich);
       final jsonDsLich = json.decode(str);
 
-      return jsonDsLich.map<Lich>((jsonLich) => Lich.fromJson(jsonLich)).toList();
+      return jsonDsLich
+          .map<Lich>((jsonLich) => Lich.fromJson(jsonLich))
+          .toList();
     } catch (err) {
       print(err);
       return null;
@@ -149,14 +146,16 @@ class AppSettings {
     }
   }
 
-
   // Save dsDiemDanh
   List<BangDiemDanh> get dsBangDiemDanh {
     try {
       final str = _sharedPreferences.getString(_kDiemDanh);
       final jsonDsBangDiemDanh = json.decode(str);
 
-      return jsonDsBangDiemDanh.map<BangDiemDanh>((jsonBangDiemDanh) => BangDiemDanh.fromJson(jsonBangDiemDanh)).toList();
+      return jsonDsBangDiemDanh
+          .map<BangDiemDanh>(
+              (jsonBangDiemDanh) => BangDiemDanh.fromJson(jsonBangDiemDanh))
+          .toList();
     } catch (err) {
       print(err);
       return null;
@@ -165,7 +164,8 @@ class AppSettings {
 
   set dsBangDiemDanh(List<BangDiemDanh> dsBangDiemDanh) {
     try {
-      final jsonDsBangDiemDanh = dsBangDiemDanh.map((bangDiemDanh) => bangDiemDanh.toJson()).toList();
+      final jsonDsBangDiemDanh =
+          dsBangDiemDanh.map((bangDiemDanh) => bangDiemDanh.toJson()).toList();
 
       _sharedPreferences.setString(_kDiemDanh, json.encode(jsonDsBangDiemDanh));
     } catch (err) {
@@ -173,14 +173,15 @@ class AppSettings {
     }
   }
 
-
   // Save dsBangDiem
   List<BangDiem> get dsBangDiem {
     try {
       final str = _sharedPreferences.getString(_kDiem);
       final jsonDsBangDiem = json.decode(str);
 
-      return jsonDsBangDiem.map<BangDiem>((jsonBangDiem) => BangDiem.fromJson(jsonBangDiem)).toList();
+      return jsonDsBangDiem
+          .map<BangDiem>((jsonBangDiem) => BangDiem.fromJson(jsonBangDiem))
+          .toList();
     } catch (err) {
       print(err);
       return null;
@@ -189,7 +190,8 @@ class AppSettings {
 
   set dsBangDiem(List<BangDiem> dsBangDiem) {
     try {
-      final jsonDsBangDiem = dsBangDiem.map((bangDiem) => bangDiem.toJson()).toList();
+      final jsonDsBangDiem =
+          dsBangDiem.map((bangDiem) => bangDiem.toJson()).toList();
 
       _sharedPreferences.setString(_kDiem, json.encode(jsonDsBangDiem));
     } catch (err) {

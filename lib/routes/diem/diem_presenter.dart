@@ -1,3 +1,5 @@
+import 'package:apfptpoly/utils/utils.dart';
+
 import '../../task/get_data.dart';
 import '../../utils/app_settings.dart';
 import 'diem_contract.dart';
@@ -10,13 +12,27 @@ class DiemPresenter {
     AppSettings.getInstance().then((settings) {
       appSettings = settings;
 
-      _view.onBangDiemReceived(appSettings.dsBangDiem);
+      if (appSettings.isAutoGet) {
+        getBangDiem();
+      } else {
+        _view.onBangDiemReceived(appSettings.dsBangDiem);
+      }
     });
   }
 
-  void getBangDiem() {
-    ApTask.getDsBangDiem().then((dsBangDiem) {
-      _view.onBangDiemReceived(dsBangDiem);
-    });
+  void getBangDiem() async {
+    try {
+      final isConnected = await getNetworkState();
+      if (isConnected) {
+        final dsBangDiem = await ApTask.getDsBangDiem();
+        _view.onBangDiemReceived(dsBangDiem);
+      } else {
+        _view.onBangDiemReceived(appSettings.dsBangDiem);
+      }
+    } catch (err) {
+      print(err);
+      _view.onError("Lỗi không xác định!", err);
+      _view.onBangDiemReceived(appSettings.dsBangDiem);
+    }
   }
 }
