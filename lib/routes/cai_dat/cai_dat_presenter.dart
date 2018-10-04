@@ -16,6 +16,7 @@ class CaiDatPresenter {
 
       if (_appSettings.isAutoGet) {
         getSinhVien();
+        getTerms();
       } else {
         _view.onSinhVienReceived(_appSettings.sinhVien);
       }
