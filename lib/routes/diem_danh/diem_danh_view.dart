@@ -59,7 +59,8 @@ class _DiemDanhScreenState extends State<DiemDanhScreen>
 
   Widget _buildBangDiemDanh() {
     return ListView.builder(
-        physics: BouncingScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics()),
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
         itemCount: _dsBangDiemDanh.length,
         itemBuilder: (_, index) => DiemDanhItem(
@@ -77,9 +78,12 @@ class _DiemDanhScreenState extends State<DiemDanhScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: _dsBangDiemDanh == null ? Loading() : _buildBangDiemDanh(),
-      decoration: kMainCardBoxDecoration,
+    return RefreshIndicator(
+      onRefresh: () => _presenter.getBangDiemDanh(),
+      child: Container(
+        child: _dsBangDiemDanh == null ? Loading() : _buildBangDiemDanh(),
+        decoration: kMainCardBoxDecoration,
+      ),
     );
   }
 }

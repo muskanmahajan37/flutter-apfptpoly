@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:apfptpoly/utils/utils.dart';
 
 import '../../task/get_data.dart';
@@ -20,7 +22,7 @@ class DiemPresenter {
     });
   }
 
-  void getBangDiem() async {
+  Future<void> getBangDiem() async {
     try {
       final isConnected = await getNetworkState();
       if (isConnected) {

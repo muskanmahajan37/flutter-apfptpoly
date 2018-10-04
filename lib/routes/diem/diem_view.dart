@@ -58,7 +58,8 @@ class _DiemScreenState extends State<DiemScreen> implements DiemContract {
 
   Widget _buildBangDiem() {
     return ListView.builder(
-      physics: BouncingScrollPhysics(),
+      physics:
+          const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
       itemCount: _dsBangDiem.length,
       itemBuilder: (_, index) => DiemItem(
@@ -77,9 +78,12 @@ class _DiemScreenState extends State<DiemScreen> implements DiemContract {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: _dsBangDiem == null ? Loading() : _buildBangDiem(),
-      decoration: kMainCardBoxDecoration,
+    return RefreshIndicator(
+      onRefresh: () => _presenter.getBangDiem(),
+      child: Container(
+        child: _dsBangDiem == null ? Loading() : _buildBangDiem(),
+        decoration: kMainCardBoxDecoration,
+      ),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:apfptpoly/utils/utils.dart';
 
 import '../../configs.dart';
@@ -31,7 +33,7 @@ class CaiDatPresenter {
     });
   }
 
-  void getSinhVien() async {
+  Future<void> getSinhVien() async {
     try {
       final isConnected = await getNetworkState();
       if (isConnected) {
@@ -47,7 +49,7 @@ class CaiDatPresenter {
     }
   }
 
-  void getTerms() async {
+  Future<void> getTerms() async {
     try {
       final isConnected = await getNetworkState();
       if (isConnected) {

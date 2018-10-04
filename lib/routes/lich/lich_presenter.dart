@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../../task/get_data.dart';
 import '../../utils/app_settings.dart';
 import '../../utils/utils.dart';
@@ -20,7 +22,7 @@ class LichPresenter {
     });
   }
 
-  void getLich() async {
+  Future<void> getLich() async {
     try {
       final isConnected = await getNetworkState();
       if (isConnected) {

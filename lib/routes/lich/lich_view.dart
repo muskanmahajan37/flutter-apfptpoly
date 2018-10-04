@@ -60,7 +60,8 @@ class _LichScreenState extends State<LichScreen> implements LichContract {
 
   Widget _buildGroupLich() {
     return ListView.builder(
-      physics: const BouncingScrollPhysics(),
+      physics:
+          const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
       padding: const EdgeInsets.all(4.0),
       itemCount: _dsGroupLich.length,
       itemBuilder: (_, index) {
@@ -83,8 +84,11 @@ class _LichScreenState extends State<LichScreen> implements LichContract {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: _dsGroupLich == null ? Loading() : _buildGroupLich(),
-        decoration: kMainCardBoxDecoration);
+    return RefreshIndicator(
+      onRefresh: () => _presenter.getLich(),
+      child: Container(
+          child: _dsGroupLich == null ? Loading() : _buildGroupLich(),
+          decoration: kMainCardBoxDecoration),
+    );
   }
 }

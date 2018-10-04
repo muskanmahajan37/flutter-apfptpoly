@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:apfptpoly/widgets/alert_message.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -148,7 +150,8 @@ class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
 
   Widget _buildSinhVien() {
     return ListView(
-      physics: const BouncingScrollPhysics(),
+      physics:
+          const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
       padding: const EdgeInsets.only(top: 24.0, bottom: 8.0),
       children: <Widget>[
         Center(
@@ -278,9 +281,14 @@ class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: _sinhVien == null || _terms == null ? Loading() : _buildSinhVien(),
-      decoration: kMainCardBoxDecoration,
+    return RefreshIndicator(
+      onRefresh: () =>
+          Future.wait([_presenter.getSinhVien(), _presenter.getTerms()]),
+      child: Container(
+        child:
+            _sinhVien == null || _terms == null ? Loading() : _buildSinhVien(),
+        decoration: kMainCardBoxDecoration,
+      ),
     );
   }
 }
