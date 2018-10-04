@@ -16,6 +16,20 @@ class Visible extends StatefulWidget {
 }
 
 class _VisibleState extends State<Visible> with SingleTickerProviderStateMixin {
+  Widget _buildChildWidget() {
+    if (widget.animation) {
+      return widget.visible ? widget.child : SizedBox(width: 0.0, height: 0.0);
+    } else {
+      return IgnorePointer(
+        ignoring: !widget.visible,
+        child: Opacity(
+          opacity: widget.visible ? 1.0 : 0.0,
+          child: widget.child,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedSize(
@@ -26,11 +40,8 @@ class _VisibleState extends State<Visible> with SingleTickerProviderStateMixin {
         curve: Curves.fastOutSlowIn,
         opacity: widget.visible ? 1.0 : 0.6,
         duration: Duration(milliseconds: 500),
-        child: widget.visible
-          ? widget.child
-          : widget.animation ? SizedBox(width: 0.0, height: 0.0) : Container(),
+        child: _buildChildWidget(),
       ),
     );
   }
 }
-

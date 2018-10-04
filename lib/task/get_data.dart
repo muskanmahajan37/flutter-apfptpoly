@@ -167,9 +167,6 @@ class ApTask {
     final String body = response.data;
     final Document document = parse(body);
 
-    // Also save terms :)
-    getTerms(document);
-
     final eDsTenMonHoc = document.querySelectorAll("h5.subheader");
     final eDsBang = document.querySelectorAll("table");
 
@@ -266,8 +263,16 @@ class ApTask {
     return dsBangDiem;
   }
 
-  static Future<List<Term>> getTerms(Document document) async {
+  static Future<List<Term>> getTerms() async {
     ApTask apTask = await getInstance();
+    final requestData = apTask.appSettings.selectedTermValue == null
+        ? null
+        : {"term_id": apTask.appSettings.selectedTermValue};
+    final Response response =
+        await apTask.dio.get(Urls.diem, data: requestData);
+    final String body = response.data;
+    final Document document = parse(body);
+
     final eTerms = document.querySelectorAll("#term_id option");
     final currentTerm =
         document.querySelector("#term_id option[selected]").attributes["value"];

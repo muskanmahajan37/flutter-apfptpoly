@@ -253,14 +253,14 @@ class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
             onChanged: (val) => _presenter.saveAutoGet(val),
           ),
         ),
-        _buildCard(
-          icon: Icons.favorite,
-          text: "Hiện quảng cáo",
-          trailing: Checkbox(
-            value: _showAds,
-            onChanged: (val) => _presenter.saveShowAds(val),
-          ),
-        ),
+//        _buildCard(
+//          icon: Icons.favorite,
+//          text: "Hiện quảng cáo",
+//          trailing: Checkbox(
+//            value: _showAds,
+//            onChanged: (val) => _presenter.saveShowAds(val),
+//          ),
+//        ),
         _buildCard(
           icon: Icons.exit_to_app,
           text: "Đăng xuất",

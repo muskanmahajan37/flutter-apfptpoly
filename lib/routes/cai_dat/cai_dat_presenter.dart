@@ -44,10 +44,22 @@ class CaiDatPresenter {
       _view.onError("Lỗi không xác định!", err);
       _view.onSinhVienReceived(_appSettings.sinhVien);
     }
+  }
 
-    ApTask.getSinhVien().then((sinhVien) {
-      _view.onSinhVienReceived(sinhVien);
-    });
+  void getTerms() async {
+    try {
+      final isConnected = await getNetworkState();
+      if (isConnected) {
+        final terms = await ApTask.getTerms();
+        _view.onTermsReceived(terms);
+      } else {
+        _view.onTermsReceived(_appSettings.terms);
+      }
+    } catch (err) {
+      print(err);
+      _view.onError("Lỗi không xác định!", err);
+      _view.onTermsReceived(_appSettings.terms);
+    }
   }
 
   void saveAutoGet(bool value) {
