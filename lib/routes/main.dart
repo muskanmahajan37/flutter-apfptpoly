@@ -18,6 +18,7 @@ class _MainScreenState extends State<MainScreen> {
   final FlutterWebviewPlugin webview = new FlutterWebviewPlugin();
 
   int _selectedTab = 0;
+  String _title = "AP FPT Poly";
 
   @override
   void initState() {
@@ -63,12 +64,18 @@ class _MainScreenState extends State<MainScreen> {
         ]);
   }
 
+  void _onTitleReceived(String title) {
+    setState(() {
+      _title = title;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Theme.of(context).primaryColor,
         appBar: AppBar(
-          title: Text("AP FPT Poly"),
+          title: Text(_title),
           centerTitle: true,
           elevation: 0.0,
         ),
@@ -78,7 +85,9 @@ class _MainScreenState extends State<MainScreen> {
             Visible(visible: _selectedTab == 0, child: LichScreen()),
             Visible(visible: _selectedTab == 1, child: DiemDanhScreen()),
             Visible(visible: _selectedTab == 2, child: DiemScreen()),
-            Visible(visible: _selectedTab == 3, child: CaiDatScreen()),
+            Visible(
+                visible: _selectedTab == 3,
+                child: CaiDatScreen(_onTitleReceived)),
           ]),
           decoration: BoxDecoration(
             color: Colors.white,

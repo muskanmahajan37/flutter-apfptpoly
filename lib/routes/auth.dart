@@ -143,7 +143,8 @@ class _AuthScreenState extends State<AuthScreen> {
                     content: "Cơ sở học không đúng, vui lòng chọn lại!",
                   ),
             );
-          } else if (url.contains(LoginStatus.loginSuccess)) {
+          } else if (url.contains(LoginStatus.loginSuccess) ||
+              url.startsWith(LoginStatus.feedback)) {
             print('login completed');
 
             final cookies = await webview.getCookies();

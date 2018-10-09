@@ -21,11 +21,11 @@ class CaiDatPresenter {
         getTerms();
       } else {
         _view.onSinhVienReceived(_appSettings.sinhVien);
+        _view.onTermsReceived(_appSettings.terms);
       }
 
       _view.onAutoGetChanged(_appSettings.isAutoGet);
       _view.onShowAdsChanged(_appSettings.isShowAds);
-      _view.onTermsReceived(_appSettings.terms);
       _view.onSelectedTermChanged(_appSettings.selectedTerm);
       _view.onSelectedPeriodChanged(kPeriods.firstWhere(
           (period) => period.value == _appSettings.period,

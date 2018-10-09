@@ -16,11 +16,23 @@ import 'cai_dat_contract.dart';
 import 'cai_dat_presenter.dart';
 
 class CaiDatScreen extends StatefulWidget {
+  Function onTitleReceived;
+
+  CaiDatScreen(this.onTitleReceived);
+
   @override
   State<StatefulWidget> createState() => _CaiDatScreenState();
 }
 
 class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
+  static const Map<String, String> kSpecialName = {
+    "hungtmph05089": "🤟 Hùng Chim 🤟",
+    "datlqph05180": "🤟 Đạt Bệu 🤟",
+    "huutvph04985": "🤟 Hĩu Trần 🤟",
+    "dattdph05119": "🤟 Đạt Đù 🤟",
+    "hungpsph04930": "🤟 Đạt Đù 🤟"
+  };
+
   static const EdgeInsets _kCardMargin =
       const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0);
 
@@ -73,6 +85,12 @@ class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
     setState(() {
       _sinhVien = sinhVien;
     });
+
+    if (kSpecialName.containsKey(sinhVien.tenDangNhap)) {
+      widget.onTitleReceived(kSpecialName.containsKey(_sinhVien.tenDangNhap)
+          ? kSpecialName[_sinhVien.tenDangNhap]
+          : _sinhVien.hoTen);
+    }
   }
 
   @override
@@ -96,13 +114,21 @@ class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
           settings.resetSettings();
           Navigator.of(context).pushReplacementNamed("/auth");
         });
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertMessage(
+                title: "Lỗi",
+                content: err.message,
+              ),
+        );
       }
     } else {
       showDialog(
         context: context,
         builder: (context) => AlertMessage(
               title: "Lỗi",
-              content: message,
+              content: err.toString(),
             ),
       );
     }
@@ -172,7 +198,9 @@ class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
         const SizedBox(height: 16.0),
         Center(
           child: Text(
-            _sinhVien.hoTen,
+            kSpecialName.containsKey(_sinhVien.tenDangNhap)
+                ? kSpecialName[_sinhVien.tenDangNhap]
+                : _sinhVien.hoTen,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 26.0,

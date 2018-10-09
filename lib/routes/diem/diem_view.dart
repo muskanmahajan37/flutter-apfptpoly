@@ -44,13 +44,21 @@ class _DiemScreenState extends State<DiemScreen> implements DiemContract {
           settings.resetSettings();
           Navigator.of(context).pushReplacementNamed("/auth");
         });
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertMessage(
+                title: "Lỗi",
+                content: err.message,
+              ),
+        );
       }
     } else {
       showDialog(
         context: context,
         builder: (context) => AlertMessage(
               title: "Lỗi",
-              content: message,
+              content: err.toString(),
             ),
       );
     }

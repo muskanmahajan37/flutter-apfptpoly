@@ -269,7 +269,7 @@ class ApTask {
         ? null
         : {"term_id": apTask.appSettings.selectedTermValue};
     final Response response =
-        await apTask.dio.get(Urls.diem, data: requestData);
+        await apTask.dio.get(Urls.diemDanh, data: requestData);
     final String body = response.data;
     final Document document = parse(body);
 

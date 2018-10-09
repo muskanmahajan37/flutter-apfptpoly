@@ -45,13 +45,21 @@ class _DiemDanhScreenState extends State<DiemDanhScreen>
           settings.resetSettings();
           Navigator.of(context).pushReplacementNamed("/auth");
         });
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertMessage(
+                title: "Lỗi",
+                content: err.message,
+              ),
+        );
       }
     } else {
       showDialog(
         context: context,
         builder: (context) => AlertMessage(
               title: "Lỗi",
-              content: message,
+              content: err.toString(),
             ),
       );
     }

@@ -46,13 +46,21 @@ class _LichScreenState extends State<LichScreen> implements LichContract {
           settings.resetSettings();
           Navigator.of(context).pushReplacementNamed("/auth");
         });
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertMessage(
+                title: "Lỗi",
+                content: err.message,
+              ),
+        );
       }
     } else {
       showDialog(
         context: context,
         builder: (context) => AlertMessage(
               title: "Lỗi",
-              content: message,
+              content: err.toString(),
             ),
       );
     }

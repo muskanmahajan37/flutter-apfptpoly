@@ -43,6 +43,7 @@ class LoginStatus {
       "msg=You%20are%20not%20connected%20to%20Google%20with%20account%20fpt.edu.vn%20%20or%20your%20session%20has%20expired";
   static const authDone = "http://ap.poly.edu.vn/hybridauth/?hauth.done=Google";
   static const loginSuccess = "http://ap.poly.edu.vn/students/index.php";
+  static const feedback = "http://ap.poly.edu.vn/feedback";
 }
 
 class Period {
