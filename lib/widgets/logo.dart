@@ -12,122 +12,68 @@ class Logo extends StatefulWidget {
 }
 
 class _LogoState extends State<Logo> with TickerProviderStateMixin {
-  static const _kTag = 'hero-logo';
-  static const _kMaxRippleSize = 260.0;
-  static const _kMinRippleSize = 200.0;
-  static const _kRipplePadding = (_kMaxRippleSize - _kMinRippleSize) / 2;
+  static const _kTag = "hero-logo";
 
-  AnimationController rippleController;
-  AnimationController sizeController;
-  CurvedAnimation curveAnimation;
-  Animation<Size> rippleSizeAnimation;
-  Animation<Size> logoSizeAnimation;
-  Animation<Color> colorAnimation;
-
-  Timer timer;
+  AnimationController controller;
+  Animation<double> rippleAnimation;
+  Animation<double> opacityAnimation;
 
   @override
-  void initState() {
-    super.initState();
+  void didUpdateWidget(Logo oldWidget) {
+    if (widget.loading) {
+      controller = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 1, milliseconds: 400),
+      );
 
-    rippleController = new AnimationController(
-      duration: Duration(milliseconds: 1000),
-      vsync: this
-    );
+      final curvedAnimation =
+          CurvedAnimation(parent: controller, curve: Curves.ease);
 
-    sizeController = new AnimationController(
-        duration: Duration(milliseconds: 500),
-        vsync: this
-    );
+      rippleAnimation =
+          Tween(begin: 200.0, end: 260.0).animate(curvedAnimation);
+      opacityAnimation = Tween(begin: 0.8, end: 0.0).animate(curvedAnimation);
 
-    curveAnimation = new CurvedAnimation(parent: rippleController, curve: Curves.ease)
-      ..addListener(() => setState((){}));
-
-    rippleSizeAnimation = new SizeTween(begin: Size.square(_kMinRippleSize), end: Size.square(_kMaxRippleSize)).animate(curveAnimation);
-
-    logoSizeAnimation = new SizeTween(begin: Size.square(_kMinRippleSize), end: Size.square(_kMinRippleSize + _kRipplePadding / 2)).animate(sizeController)
-      ..addListener(() => setState((){}));
-
-    colorAnimation = new ColorTween(begin: Colors.white, end: Colors.white.withOpacity(0.0)).animate(curveAnimation);
+      controller
+        ..addListener(() => setState(() {}))
+        ..repeat();
+    } else {
+      controller?.dispose();
+    }
   }
 
   @override
   void dispose() {
-    if (timer != null) {
-      timer.cancel();
-    }
+    controller?.dispose();
 
-    if (rippleController != null) {
-      rippleController.dispose();
-    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.loading && (timer == null || !timer.isActive)) {
-      timer = new Timer.periodic(Duration(milliseconds: 1600), (Timer t) {
-        sizeController.forward();
-
-        Timer(Duration(milliseconds: 300), () {
-          rippleController.forward(from: 0.0);
-        });
-
-        Timer(Duration(milliseconds: 500), () {
-          sizeController.reverse();
-        });
-      });
-    }
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Hero(
+      tag: _kTag,
+      child: Stack(
+        alignment: Alignment.center,
         children: <Widget>[
-          Hero(
-            tag: _kTag,
-            child: Container(
-              width: _kMaxRippleSize,
-              height: _kMaxRippleSize,
-              child: Stack(
-                alignment: Alignment.center,
-                children: <Widget>[
-                  Container(
-                    width: rippleSizeAnimation.value.width,
-                    height: rippleSizeAnimation.value.height,
-                    decoration: BoxDecoration(
-                        color: colorAnimation.value,
-                        shape: BoxShape.circle
-                    ),
-                  ),
-                  Container(
-                    width: logoSizeAnimation.value.width,
-                    height: logoSizeAnimation.value.height,
-                    padding: EdgeInsets.all(16.0),
-                    child: Image.asset('assets/images/logo.png'),
-                    decoration:  BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: kElevationToShadow[2]
-                    ),
-                  ),
-                ],
-              ),
+          Container(
+            width: rippleAnimation?.value ?? 200.0,
+            height: rippleAnimation?.value ?? 200.0,
+            decoration: ShapeDecoration(
+              shape: CircleBorder(),
+              color: Colors.white.withOpacity(opacityAnimation?.value ?? 0.0),
             ),
           ),
-          SizedBox(height: 16.0),
-          widget.loading
-              ? Material(
-                  color: Colors.transparent,
-                  child: Text(
-                      "Đăng nhập...",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        fontSize: 20.0
-                      ),
-                    ),
-                )
-              : SizedBox(width: 0.0, height: 0.0),
+          Container(
+            width: 200.0,
+            height: 200.0,
+            padding: EdgeInsets.all(12.0),
+            decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: CircleBorder(),
+              shadows: kElevationToShadow[1],
+            ),
+            child: Image.asset("assets/images/logo.png"),
+          ),
         ],
       ),
     );
