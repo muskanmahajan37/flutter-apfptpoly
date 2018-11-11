@@ -49,13 +49,14 @@ class ApTask {
     return _instance;
   }
 
-  static Future<void> registerAccount(String email, String cookies) async {
+  static Future<String> registerAccount(String email, String cookies) async {
     // Push cookies info to server to push every 12-mins to AP
     // To increase the expired date of the cookies
     // You can check out the server's source code: https://github.com/scitbiz/apfptpoly-server
     ApTask apTask = await getInstance();
-    await apTask.dio
-        .post(Urls.auth, data: {'username': email, 'cookies': cookies});
+    Response<String> response = await apTask.dio
+        .post(Urls.auth, data: {'username': email, 'cookie': cookies});
+    return response.data;
   }
 
   static Future<SinhVien> getSinhVien() async {

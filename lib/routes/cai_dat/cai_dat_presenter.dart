@@ -55,13 +55,16 @@ class CaiDatPresenter {
       if (isConnected) {
         final terms = await ApTask.getTerms();
         _view.onTermsReceived(terms);
+        _view.onSelectedTermChanged(_appSettings.selectedTerm);
       } else {
         _view.onTermsReceived(_appSettings.terms);
+        _view.onSelectedTermChanged(_appSettings.selectedTerm);
       }
     } catch (err) {
       print(err);
       _view.onError("Lỗi không xác định!", err);
       _view.onTermsReceived(_appSettings.terms);
+      _view.onSelectedTermChanged(_appSettings.selectedTerm);
     }
   }
 

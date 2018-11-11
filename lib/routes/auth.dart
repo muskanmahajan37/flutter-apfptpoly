@@ -151,8 +151,12 @@ class _AuthScreenState extends State<AuthScreen> {
             cookieHandler.saveCookies("http://ap.poly.edu.vn", cookies);
 
             final sinhVien = await ApTask.getSinhVien();
-            await ApTask.registerAccount(sinhVien.tenDangNhap,
+            final result = await ApTask.registerAccount(sinhVien.tenDangNhap,
                 cookieHandler.readCookies("http://ap.poly.edu.vn"));
+
+            if (result != "ok") {
+              cookieHandler.saveCookiesString("http://ap.poly.edu.vn", result);
+            }
 
             appSettings.isSignedIn = true;
             Navigator.of(context).pushReplacementNamed('/main');

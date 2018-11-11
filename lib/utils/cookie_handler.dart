@@ -34,6 +34,11 @@ class CookieHandler {
     file.writeAsStringSync(content);
   }
 
+  void saveCookiesString(String url, String cookies) {
+    final File file = getFile(url);
+    file.writeAsStringSync(cookies);
+  }
+
   String readCookies(String url) {
     File file = getFile(url);
     return file.readAsStringSync();

@@ -29,8 +29,7 @@ class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
     "hungtmph05089": "🤟 Hùng Chim 🤟",
     "datlqph05180": "🤟 Đạt Bệu 🤟",
     "huutvph04985": "🤟 Hĩu Trần 🤟",
-    "dattdph05119": "🤟 Đạt Đù 🤟",
-    "hungpsph04930": "🤟 Đạt Đù 🤟"
+    "dattdph05119": "🤟 Đạt Đù 🤟"
   };
 
   static const EdgeInsets _kCardMargin =
