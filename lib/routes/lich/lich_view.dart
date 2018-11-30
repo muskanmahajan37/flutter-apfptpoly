@@ -27,7 +27,7 @@ class _LichScreenState extends State<LichScreen> implements LichContract {
   void initState() {
     super.initState();
 
-    _presenter = new LichPresenter(this);
+    _presenter = LichPresenter(this);
   }
 
   @override

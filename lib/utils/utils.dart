@@ -28,7 +28,7 @@ List<GroupLich> getDsGroupLichFrom(List<Lich> dsLich) {
 Future<bool> getNetworkState() async {
   try {
     final ConnectivityResult connectivityResult =
-        await (new Connectivity().checkConnectivity());
+        await (Connectivity().checkConnectivity());
     return connectivityResult != ConnectivityResult.none;
   } catch (err) {
     print(err);

@@ -38,21 +38,21 @@ class CustomDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new AnimatedPadding(
+    return AnimatedPadding(
       padding: MediaQuery.of(context).viewInsets +
           const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
       duration: insetAnimationDuration,
       curve: insetAnimationCurve,
-      child: new MediaQuery.removeViewInsets(
+      child: MediaQuery.removeViewInsets(
         removeLeft: true,
         removeTop: true,
         removeRight: true,
         removeBottom: true,
         context: context,
-        child: new Center(
-          child: new ConstrainedBox(
+        child: Center(
+          child: ConstrainedBox(
             constraints: const BoxConstraints(minWidth: 280.0),
-            child: new Material(
+            child: Material(
               elevation: 24.0,
               color: _getColor(context),
               type: MaterialType.card,
@@ -144,13 +144,12 @@ class CustomAlertDialog extends StatelessWidget {
     String label = semanticLabel;
 
     if (title != null) {
-      children.add(new Padding(
+      children.add(Padding(
         padding: titlePadding ??
-            new EdgeInsets.fromLTRB(
-                24.0, 24.0, 24.0, content == null ? 20.0 : 0.0),
-        child: new DefaultTextStyle(
+            EdgeInsets.fromLTRB(24.0, 24.0, 24.0, content == null ? 20.0 : 0.0),
+        child: DefaultTextStyle(
           style: Theme.of(context).textTheme.title,
-          child: new Semantics(child: title, namesRoute: true),
+          child: Semantics(child: title, namesRoute: true),
         ),
       ));
     } else {
@@ -166,10 +165,10 @@ class CustomAlertDialog extends StatelessWidget {
     }
 
     if (content != null) {
-      children.add(new Flexible(
-        child: new Padding(
+      children.add(Flexible(
+        child: Padding(
           padding: contentPadding,
-          child: new DefaultTextStyle(
+          child: DefaultTextStyle(
             style: Theme.of(context).textTheme.subhead,
             child: content,
           ),
@@ -178,15 +177,15 @@ class CustomAlertDialog extends StatelessWidget {
     }
 
     if (actions != null) {
-      children.add(new ButtonTheme.bar(
-        child: new ButtonBar(
+      children.add(ButtonTheme.bar(
+        child: ButtonBar(
           children: actions,
         ),
       ));
     }
 
-    Widget dialogChild = new IntrinsicWidth(
-      child: new Column(
+    Widget dialogChild = IntrinsicWidth(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: children,
@@ -195,8 +194,8 @@ class CustomAlertDialog extends StatelessWidget {
 
     if (label != null)
       dialogChild =
-          new Semantics(namesRoute: true, label: label, child: dialogChild);
+          Semantics(namesRoute: true, label: label, child: dialogChild);
 
-    return new CustomDialog(child: dialogChild);
+    return CustomDialog(child: dialogChild);
   }
 }

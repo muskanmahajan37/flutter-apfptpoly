@@ -17,8 +17,8 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final FlutterWebviewPlugin webview = new FlutterWebviewPlugin();
-  final CookieHandler cookieHandler = new CookieHandler();
+  final FlutterWebviewPlugin webview = FlutterWebviewPlugin();
+  final CookieHandler cookieHandler = CookieHandler();
 
   AppSettings appSettings;
   Campus _selectedCampus = kCampuses[0];

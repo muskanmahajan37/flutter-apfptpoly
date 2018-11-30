@@ -15,7 +15,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final FlutterWebviewPlugin webview = new FlutterWebviewPlugin();
+  final FlutterWebviewPlugin webview = FlutterWebviewPlugin();
 
   int _selectedTab = 0;
   String _title = "AP FPT Poly";

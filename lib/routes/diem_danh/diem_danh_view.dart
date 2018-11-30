@@ -26,7 +26,7 @@ class _DiemDanhScreenState extends State<DiemDanhScreen>
   void initState() {
     super.initState();
 
-    _presenter = new DiemDanhPresenter(this);
+    _presenter = DiemDanhPresenter(this);
   }
 
   @override

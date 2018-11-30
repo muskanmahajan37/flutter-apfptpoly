@@ -25,7 +25,7 @@ class _DiemScreenState extends State<DiemScreen> implements DiemContract {
   void initState() {
     super.initState();
 
-    _presenter = new DiemPresenter(this);
+    _presenter = DiemPresenter(this);
   }
 
   @override

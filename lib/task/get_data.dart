@@ -16,20 +16,20 @@ import '../utils/app_settings.dart';
 import '../utils/cookie_handler.dart';
 
 class ApTask {
-  static final kRegexDate = new RegExp(r"Slot (.+) \(từ (.+):00 đến (.+):00\)");
-  static final kRegexDiemDanhTitle = new RegExp(r"(.+?) \((.+?)\) - (.+)");
-  static final kRegexDiemTitle = new RegExp(r".+?: (.+?) \((.+?)\) - (.+)");
+  static final kRegexDate = RegExp(r"Slot (.+) \(từ (.+):00 đến (.+):00\)");
+  static final kRegexDiemDanhTitle = RegExp(r"(.+?) \((.+?)\) - (.+)");
+  static final kRegexDiemTitle = RegExp(r".+?: (.+?) \((.+?)\) - (.+)");
 
   AppSettings appSettings;
-  final CookieHandler cookieHandler = new CookieHandler();
-  final Dio dio = new Dio(new Options(
+  final CookieHandler cookieHandler = CookieHandler();
+  final Dio dio = Dio(Options(
       followRedirects: true, connectTimeout: 9999999, receiveTimeout: 9999999));
 
   static ApTask _instance;
 
   static Future<ApTask> getInstance() async {
     if (_instance == null) {
-      _instance = new ApTask();
+      _instance = ApTask();
 
       // Setup app settings
       _instance.appSettings = await AppSettings.getInstance();
@@ -38,7 +38,7 @@ class ApTask {
       await _instance.cookieHandler.setupStorage();
 
       // Setup dio
-      CookieJar cookieJar = new CookieJar();
+      CookieJar cookieJar = CookieJar();
       cookieJar.saveFromResponse(Uri.parse("https://wwww.google.com"),
           _instance.cookieHandler.readCookiesList("https://wwww.google.com"));
       cookieJar.saveFromResponse(Uri.parse("http://ap.poly.edu.vn"),
