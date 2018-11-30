@@ -9,6 +9,7 @@ dependencies:
       url: git://github.com/YukiOya/flutter_webview_plugin.git
   dio: ^1.0.1
   html: any
+  scoped_model: ^1.0.1
   path_provider: ^0.4.1
   flutter_swiper: ^1.0.6
   rounded_modal: ^0.0.1
