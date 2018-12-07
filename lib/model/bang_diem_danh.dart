@@ -18,15 +18,16 @@ class BangDiemDanh {
   });
 
   BangDiemDanh.fromJson(Map<String, dynamic> json)
-    : tenMon = json["tenMon"],
-      tongVang = json["tongVang"],
-      phanTramVang = json["phanTramVang"],
-      maMon = json["maMon"],
-      lop = json["lop"],
-      dsDiemDanh = json["dsDiemDanh"].map<DiemDanh>((diemDanh) => DiemDanh.fromJson(diemDanh)).toList();
+      : tenMon = json["tenMon"],
+        tongVang = json["tongVang"],
+        phanTramVang = json["phanTramVang"],
+        maMon = json["maMon"],
+        lop = json["lop"],
+        dsDiemDanh = json["dsDiemDanh"]
+            .map<DiemDanh>((diemDanh) => DiemDanh.fromJson(diemDanh))
+            .toList();
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "tenMon": tenMon,
         "tongVang": tongVang,
         "phanTramVang": phanTramVang,
@@ -34,6 +35,29 @@ class BangDiemDanh {
         "lop": lop,
         "dsDiemDanh": dsDiemDanh.map((diemDanh) => diemDanh.toJson()).toList(),
       };
+
+  static List<BangDiemDanh> toList(String dsBangDiemDanh) {
+    try {
+      final dsBangDiemDanhJson = json.decode(dsBangDiemDanh);
+      return dsBangDiemDanhJson
+          .map((jsonLich) => BangDiemDanh.fromJson(jsonLich))
+          .toList();
+    } catch (error) {
+      print("BangDiemDanh - " + error.toString());
+      return <BangDiemDanh>[];
+    }
+  }
+
+  static String toListString(List<BangDiemDanh> dsBangDiemDanh) {
+    try {
+      final dsBangDiemDanhJson =
+          dsBangDiemDanh.map((lich) => lich.toJson()).toList();
+      return json.encode(dsBangDiemDanhJson);
+    } catch (error) {
+      print("BangDiemDanh - " + error.toString());
+      return "";
+    }
+  }
 }
 
 class DiemDanh {
@@ -55,18 +79,16 @@ class DiemDanh {
     this.ghiChu = "",
   });
 
-
   DiemDanh.fromJson(Map<String, dynamic> json)
-    : baiHoc = json["baiHoc"],
-      ngay = json["ngay"],
-      ca = json["ca"],
-      nguoiDiemDanh = json["nguoiDiemDanh"],
-      moTa = json["moTa"],
-      trangThai = json["trangThai"],
-      ghiChu = json["ghiChu"];
+      : baiHoc = json["baiHoc"],
+        ngay = json["ngay"],
+        ca = json["ca"],
+        nguoiDiemDanh = json["nguoiDiemDanh"],
+        moTa = json["moTa"],
+        trangThai = json["trangThai"],
+        ghiChu = json["ghiChu"];
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "baiHoc": baiHoc,
         "ngay": ngay,
         "ca": ca,

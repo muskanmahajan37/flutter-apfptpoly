@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:apfptpoly/app_model.dart';
 import 'package:apfptpoly/widgets/alert_message.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -109,10 +110,8 @@ class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
     if (err is DioError) {
       final int statusCode = err.response.statusCode;
       if (statusCode == 404 || statusCode == 403) {
-        AppSettings.getInstance().then((settings) {
-          settings.resetSettings();
-          Navigator.of(context).pushReplacementNamed("/auth");
-        });
+        AppModel.of(context).appSettings.resetSettings();
+        Navigator.of(context).pushReplacementNamed("/auth");
       } else {
         showDialog(
           context: context,
@@ -295,10 +294,8 @@ class _CaiDatScreenState extends State<CaiDatScreen> implements CaiDatContract {
           icon: Icons.exit_to_app,
           text: "Đăng xuất",
           onTap: () {
-            AppSettings.getInstance().then((settings) {
-              settings.resetSettings();
-              Navigator.of(context).pushReplacementNamed("/auth");
-            });
+            AppModel.of(context).appSettings.resetSettings();
+            Navigator.of(context).pushReplacementNamed("/auth");
           },
         ),
         _buildCredit(),

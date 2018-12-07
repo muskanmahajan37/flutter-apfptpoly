@@ -11,15 +11,15 @@ class DiemPresenter {
   DiemContract _view;
 
   DiemPresenter(this._view) {
-    AppSettings.getInstance().then((settings) {
-      appSettings = settings;
+    // AppSettings.getInstance().then((settings) {
+    //   appSettings = settings;
 
-      if (appSettings.isAutoGet) {
-        getBangDiem();
-      } else {
-        _view.onBangDiemReceived(appSettings.dsBangDiem);
-      }
-    });
+    //   if (appSettings.isAutoGet) {
+    //     getBangDiem();
+    //   } else {
+    //     _view.onBangDiemReceived(appSettings.dsBangDiem);
+    //   }
+    // });
   }
 
   Future<void> getBangDiem() async {

@@ -32,7 +32,7 @@ class ApTask {
       _instance = ApTask();
 
       // Setup app settings
-      _instance.appSettings = await AppSettings.getInstance();
+      // _instance.appSettings = await AppSettings.getInstance();
 
       // Setup cookies handler
       await _instance.cookieHandler.setupStorage();

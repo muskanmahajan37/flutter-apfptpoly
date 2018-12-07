@@ -13,24 +13,24 @@ class CaiDatPresenter {
   AppSettings _appSettings;
 
   CaiDatPresenter(this._view) {
-    AppSettings.getInstance().then((settings) {
-      _appSettings = settings;
+    // AppSettings.getInstance().then((settings) {
+    //   _appSettings = settings;
 
-      if (_appSettings.isAutoGet) {
-        getSinhVien();
-        getTerms();
-      } else {
-        _view.onSinhVienReceived(_appSettings.sinhVien);
-        _view.onTermsReceived(_appSettings.terms);
-      }
+    //   if (_appSettings.isAutoGet) {
+    //     getSinhVien();
+    //     getTerms();
+    //   } else {
+    //     _view.onSinhVienReceived(_appSettings.sinhVien);
+    //     _view.onTermsReceived(_appSettings.terms);
+    //   }
 
-      _view.onAutoGetChanged(_appSettings.isAutoGet);
-      _view.onShowAdsChanged(_appSettings.isShowAds);
-      _view.onSelectedTermChanged(_appSettings.selectedTerm);
-      _view.onSelectedPeriodChanged(kPeriods.firstWhere(
-          (period) => period.value == _appSettings.period,
-          orElse: () => kPeriods[0]));
-    });
+    //   _view.onAutoGetChanged(_appSettings.isAutoGet);
+    //   _view.onShowAdsChanged(_appSettings.isShowAds);
+    //   _view.onSelectedTermChanged(_appSettings.selectedTerm);
+    //   _view.onSelectedPeriodChanged(kPeriods.firstWhere(
+    //       (period) => period.value == _appSettings.period,
+    //       orElse: () => kPeriods[0]));
+    // });
   }
 
   Future<void> getSinhVien() async {

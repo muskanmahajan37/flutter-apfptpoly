@@ -1,6 +1,12 @@
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
+import '../configs.dart';
+
+class CookieType {
+  static const google = "https://wwww.google.com";
+  static const ap = Urls.ap;
+}
 
 class CookieHandler {
   Directory cookieDir;

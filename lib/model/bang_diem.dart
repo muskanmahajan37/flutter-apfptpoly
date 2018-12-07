@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class BangDiem {
   final String tenMon;
   final String maMon;
@@ -16,15 +18,15 @@ class BangDiem {
   });
 
   BangDiem.fromJson(Map<String, dynamic> json)
-    : tenMon = json["tenMon"],
-      maMon = json["maMon"],
-      lop = json["lop"],
-      trangThai = json["trangThai"],
-      trungBinh = json["trungBinh"],
-      dsDiem = json["dsDiem"].map<Diem>((diem) => Diem.fromJson(diem)).toList();
+      : tenMon = json["tenMon"],
+        maMon = json["maMon"],
+        lop = json["lop"],
+        trangThai = json["trangThai"],
+        trungBinh = json["trungBinh"],
+        dsDiem =
+            json["dsDiem"].map<Diem>((diem) => Diem.fromJson(diem)).toList();
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "tenMon": tenMon,
         "maMon": maMon,
         "lop": lop,
@@ -32,6 +34,28 @@ class BangDiem {
         "trungBinh": trungBinh,
         "dsDiem": dsDiem.map((diem) => diem.toJson()).toList(),
       };
+
+  static List<BangDiem> toList(String dsBangDiem) {
+    try {
+      final dsBangDiemJson = json.decode(dsBangDiem);
+      return dsBangDiemJson
+          .map((jsonLich) => BangDiem.fromJson(jsonLich))
+          .toList();
+    } catch (error) {
+      print("BangDiem - " + error.toString());
+      return <BangDiem>[];
+    }
+  }
+
+  static String toListString(List<BangDiem> dsBangDiem) {
+    try {
+      final dsBangDiemJson = dsBangDiem.map((lich) => lich.toJson()).toList();
+      return json.encode(dsBangDiemJson);
+    } catch (error) {
+      print("BangDiem - " + error.toString());
+      return "";
+    }
+  }
 }
 
 class Diem {
@@ -48,13 +72,12 @@ class Diem {
   });
 
   Diem.fromJson(Map<String, dynamic> json)
-    : ten = json["ten"],
-      trongSo = json["trongSo"],
-      diem = json["diem"],
-      ghiChu = json["ghiChu"];
+      : ten = json["ten"],
+        trongSo = json["trongSo"],
+        diem = json["diem"],
+        ghiChu = json["ghiChu"];
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "ten": ten,
         "trongSo": trongSo,
         "diem": diem,

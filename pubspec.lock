@@ -93,10 +93,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "15df49d1f0299759e6efc4790950d7a5ba101591"
+      resolved-ref: acb4f614ed1374daf81895c534bbd4f816813c43
       url: "git://github.com/YukiOya/flutter_webview_plugin.git"
     source: git
-    version: "0.2.1+2"
+    version: "0.3.0+2"
   html:
     dependency: "direct main"
     description:

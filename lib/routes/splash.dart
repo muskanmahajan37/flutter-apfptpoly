@@ -1,24 +1,36 @@
 import 'dart:async';
+
+import 'package:apfptpoly/configs.dart';
 import 'package:flutter/material.dart';
+
+import '../app_model.dart';
 import '../utils/app_settings.dart';
 import '../widgets/logo.dart';
 
-class SplashScreen extends StatelessWidget {
-  static const Duration _kSplashTimeout = Duration(seconds: 1);
+class SplashScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _SplashScreenState();
+}
 
-  void _countDown(BuildContext context) async {
-    await Future.delayed(_kSplashTimeout);
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
 
-    AppSettings prefs = await AppSettings.getInstance();
+    _countDown();
+  }
 
-    String nextRoute = prefs.isSignedIn ? '/main' : '/auth';
+  void _countDown() async {
+    await Future.delayed(kSplashTimeout);
+
+    AppSettings appSettings = AppModel.of(context).appSettings;
+
+    String nextRoute = appSettings.isSignedIn ? '/main' : '/auth';
     Navigator.of(context).pushReplacementNamed(nextRoute);
   }
 
   @override
   Widget build(BuildContext context) {
-    _countDown(context);
-
     return Scaffold(
       body: Container(
         color: Colors.deepOrange,

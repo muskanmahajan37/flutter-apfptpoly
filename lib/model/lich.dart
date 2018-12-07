@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Lich {
   final bool isTestDay;
   final String slot;
@@ -51,6 +53,26 @@ class Lich {
         "giangVien": giangVien,
         "chiTiet": chiTiet.toJson(),
       };
+
+  static List<Lich> toList(String lich) {
+    try {
+      final lichJson = json.decode(lich);
+      return lichJson.map((jsonLich) => Lich.fromJson(jsonLich)).toList();
+    } catch (error) {
+      print("Lich - " + error.toString());
+      return <Lich>[];
+    }
+  }
+
+  static String toListString(List<Lich> dsLich) {
+    try {
+      final dsLichJson = dsLich.map((lich) => lich.toJson()).toList();
+      return json.encode(dsLichJson);
+    } catch (error) {
+      print("Lich - " + error.toString());
+      return "";
+    }
+  }
 }
 
 class ChiTietLich {

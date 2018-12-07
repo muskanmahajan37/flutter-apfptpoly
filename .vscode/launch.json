@@ -5,7 +5,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Flutter",
+      "name": "Flutter: Attach to Process",
+      "type": "dart",
+      "request": "attach"
+    },
+    {
+      "name": "Flutter: Launch",
       "request": "launch",
       "type": "dart"
     }

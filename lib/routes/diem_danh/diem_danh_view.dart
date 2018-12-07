@@ -1,3 +1,4 @@
+import 'package:apfptpoly/app_model.dart';
 import 'package:apfptpoly/utils/app_settings.dart';
 import 'package:apfptpoly/widgets/alert_message.dart';
 import 'package:dio/dio.dart';
@@ -41,10 +42,8 @@ class _DiemDanhScreenState extends State<DiemDanhScreen>
     if (err is DioError) {
       final int statusCode = err.response.statusCode;
       if (statusCode == 404 || statusCode == 403) {
-        AppSettings.getInstance().then((settings) {
-          settings.resetSettings();
-          Navigator.of(context).pushReplacementNamed("/auth");
-        });
+        AppModel.of(context).appSettings.resetSettings();
+        Navigator.of(context).pushReplacementNamed("/auth");
       } else {
         showDialog(
           context: context,

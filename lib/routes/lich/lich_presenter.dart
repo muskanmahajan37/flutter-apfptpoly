@@ -10,16 +10,16 @@ class LichPresenter {
   LichContract _view;
 
   LichPresenter(this._view) {
-    AppSettings.getInstance().then((settings) {
-      appSettings = settings;
+    // AppSettings.getInstance().then((settings) {
+    //   appSettings = settings;
 
-      if (appSettings.isAutoGet) {
-        getLich();
-      } else {
-        final dsGroupLich = getDsGroupLichFrom(appSettings.dsLich);
-        _view.onLichReceived(dsGroupLich);
-      }
-    });
+    //   if (appSettings.isAutoGet) {
+    //     getLich();
+    //   } else {
+    //     final dsGroupLich = getDsGroupLichFrom(appSettings.dsLich);
+    //     _view.onLichReceived(dsGroupLich);
+    //   }
+    // });
   }
 
   Future<void> getLich() async {

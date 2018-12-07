@@ -1,9 +1,38 @@
 import 'package:flutter/material.dart';
-
 import 'model/campus.dart';
 
-const kUserAgent =
-    "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36";
+const kUserAgent = "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/59.0.3071.125 Mobile Safari/537.36";
+
+const Duration kSplashTimeout = Duration(seconds: 1);
+
+class Urls {
+  static const ap = "http://ap.poly.edu.vn";
+  static const main = "$ap/students/index.php";
+  static const chooseCampus = "$ap/choose_campus.php";
+  static const login = "$ap/hlogin.php?provider=Google";
+
+  static const authServer = "http://apfptpoly.herokuapp.com";
+  static const auth = "$authServer/auth";
+
+  static const thongTinSinhVien = main;
+  static const lich = "$main?router=lichhoc";
+  static const diemDanh = "$main?router=diemdanh";
+  static const diem = "$main?router=diemtheoky";
+}
+
+class LoginStatus {
+  static const finishedChoosingCampus = "${Urls.ap}/index.php";
+  static const startLogin =
+      "https://accounts.google.com/signin/oauth/identifier?client_id";
+  static const loginFailed = "msg=Login%20failed!";
+  static const wrongAccount =
+      "msg=You%20are%20not%20connected%20to%20Google%20with%20account%20fpt.edu.vn%20%20or%20your%20session%20has%20expired";
+  static const authDone = "${Urls.ap}/hybridauth/?hauth.done=Google";
+  static const loginSuccess = Urls.main;
+  static const feedback = "${Urls.ap}/feedback";
+}
 
 const kBorderRadius = 999.0;
 
@@ -34,33 +63,9 @@ const kPeriods = <Period>[
   Period(title: "90 ngày trước", value: -90),
 ];
 
-class LoginStatus {
-  static const finishedChoosingCampus = "http://ap.poly.edu.vn/index.php";
-  static const startLogin =
-      "https://accounts.google.com/signin/oauth/identifier?client_id";
-  static const loginFailed = "msg=Login%20failed!";
-  static const wrongAccount =
-      "msg=You%20are%20not%20connected%20to%20Google%20with%20account%20fpt.edu.vn%20%20or%20your%20session%20has%20expired";
-  static const authDone = "http://ap.poly.edu.vn/hybridauth/?hauth.done=Google";
-  static const loginSuccess = "http://ap.poly.edu.vn/students/index.php";
-  static const feedback = "http://ap.poly.edu.vn/feedback";
-}
-
 class Period {
   final String title;
   final int value;
 
   const Period({this.title, this.value});
-}
-
-class Urls {
-  static const server = "http://apfptpoly.herokuapp.com";
-  static const host = "http://ap.poly.edu.vn/students/index.php";
-
-  static const auth = "$server/auth";
-
-  static const thongTinSinhVien = host;
-  static const lich = "$host?router=lichhoc";
-  static const diemDanh = "$host?router=diemdanh";
-  static const diem = "$host?router=diemtheoky";
 }

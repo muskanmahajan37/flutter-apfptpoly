@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class SinhVien {
   final String avatar;
   final String tenDangNhap;
@@ -41,6 +43,9 @@ class SinhVien {
     this.kyThu = "",
   });
 
+  static fromJSONString(String sinhVien) =>
+      SinhVien.fromJSON(json.decode(sinhVien)) ?? null;
+
   SinhVien.fromJSON(Map<String, dynamic> json)
       : avatar = json["avatar"],
         tenDangNhap = json["tenDangNhap"],
@@ -83,4 +88,7 @@ class SinhVien {
         "trangThai": trangThai,
         "kyThu": kyThu,
       };
+
+  @override
+  String toString() => json.encode(this.toJson());
 }
